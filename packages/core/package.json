@@ -2,12 +2,13 @@
   "name": "hono-storage",
   "version": "0.0.0",
   "type": "module",
-  "module": "dist/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "lint": "eslint --fix --ext .ts,.tsx src",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "build": "tsc"
+    "build": "tsup ./src/index.ts --format esm,cjs --dts"
   },
   "keywords": [
     "hono"
