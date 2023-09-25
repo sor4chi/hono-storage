@@ -8,7 +8,8 @@
   "scripts": {
     "lint": "eslint --fix --ext .ts,.tsx src",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "build": "tsup ./src/index.ts --format esm,cjs --dts"
+    "build": "tsup ./src/index.ts --format esm,cjs --dts",
+    "test": "vitest"
   },
   "keywords": [
     "hono"
