@@ -1,7 +1,7 @@
-import { MiddlewareHandler } from "hono";
+import type { MiddlewareHandler, Context } from "hono";
 
 type HonoStorageOptions = {
-  storage: (files: File[]) => Promise<void> | void;
+  storage: (c: Context, files: File[]) => Promise<void> | void;
 };
 
 const isFile = (value: unknown): value is File => {
@@ -19,8 +19,9 @@ export class HonoStorage {
     return async (c, next) => {
       const formData = await c.req.parseBody();
       const file = formData[key];
+
       if (isFile(file)) {
-        await this.options.storage([file]);
+        await this.options.storage(c, [file]);
       }
 
       await next();
@@ -32,7 +33,7 @@ export class HonoStorage {
       const formData = await c.req.parseBody();
       const files = formData[key];
       if (Array.isArray(files) && files.every(isFile)) {
-        await this.options.storage(files as unknown as File[]);
+        await this.options.storage(c, files as unknown as File[]);
       }
 
       await next();
