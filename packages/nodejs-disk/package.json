@@ -1,0 +1,34 @@
+{
+  "name": "hono-storage-for-nodejs-disk",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "lint": "eslint --fix --ext .ts,.tsx src",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "test": "vitest",
+    "build": "tsup ./src/index.ts --format esm,cjs --dts"
+  },
+  "keywords": [
+    "hono"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "sor4chi",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^18.7.6",
+    "hono": "^3.7.2",
+    "hono-storage": "workspace:*"
+  },
+  "devDependencies": {
+    "@hono/node-server": "^1.2.0",
+    "@types/supertest": "^2.0.12",
+    "supertest": "^6.3.3",
+    "vitest": "^0.34.5"
+  }
+}
