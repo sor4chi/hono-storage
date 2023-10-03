@@ -77,5 +77,35 @@ describe("HonoStorage", () => {
       });
       expect(content2).toBe("Hello Hono Storage 3\n");
     });
+
+    it("can be used as a multiple file upload middleware with same key", async () => {
+      const storage = new HonoStorage({
+        dest: join(__dirname, "tmp"),
+      });
+      const app = new Hono();
+      app.post("/upload", storage.multiple("file"), (c) =>
+        c.text("Hello World"),
+      );
+      const server = createAdaptorServer(app);
+      const res = await request(server)
+        .post("/upload")
+        .attach("file", join(__dirname, "fixture/sample2.txt"))
+        .attach("file", join(__dirname, "fixture/sample3.txt"));
+      expect(res.status).toBe(200);
+      expect(res.text).toBe("Hello World");
+
+      const files = await fs.readdir(join(__dirname, "tmp"));
+      expect(files).toEqual(["sample2.txt", "sample3.txt"]);
+
+      const content1 = await fs.readFile(join(__dirname, "tmp/sample2.txt"), {
+        encoding: "utf-8",
+      });
+      expect(content1).toBe("Hello Hono Storage 2\n");
+
+      const content2 = await fs.readFile(join(__dirname, "tmp/sample3.txt"), {
+        encoding: "utf-8",
+      });
+      expect(content2).toBe("Hello Hono Storage 3\n");
+    });
   });
 });

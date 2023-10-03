@@ -9,6 +9,6 @@ const storage = new HonoStorage({
   dest: join(__dirname, "tmp"),
 });
 
-app.post("/", storage.single("file"), (c) => c.text("Hello Hono!"));
+app.post("/", storage.single("file"), (c) => c.text("OK"));
 
 serve(app);

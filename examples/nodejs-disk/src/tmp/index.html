@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Canvas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+  </head>
+  <body>
+    <canvas width="1920" height="1800" style="width: 960px;height: 900px;"></canvas>
+    <script>
+fetch("https://r2-loader.monica-dev.workers.dev/stream/japan.txt").then((response) => {
+
+  const reader = response.body.getReader();
+  const stream = new ReadableStream({
+    start(controller) {
+      function push() {
+          reader.read().then(({ done, value }) => {
+              if (done) {
+                  controller.close();
+                  draw("");
+                  console.log("Stream End")
+                  return;
+              }
+
+              const decodeValue = new TextDecoder("utf-8").decode(value);
+              draw(decodeValue);
+              controller.enqueue(value);
+              push();
+          });
+      };
+      push();
+      }
+    });
+
+  return new Response(stream, { headers: { "Content-Type": "text/html" } });
+});
+
+let buffer = "";
+
+const canvas = d3.select("canvas")
+const ctx = canvas.node().getContext('2d');
+
+const projection = d3.geoMercator()     //æŠ•å½±æ³•ã®æŒ‡å®š
+    .scale(4000)    //ã‚¹ã‚±ãƒ¼ãƒ«ï¼ˆã‚ºãƒ¼ãƒ ï¼‰ã®æŒ‡å®š
+    .translate([960,500*2]) //è¡¨ç¤ºä½ç½®èª¿æ•´
+    .center([139.0032936, 36.3219088]); //ä¸­å¿ƒã®åº§æ¨™ã‚’æŒ‡å®š
+
+
+const  geoPath = d3.geoPath(projection)
+  .context(ctx);
+
+
+function draw(chank){
+  buffer += chank;
+
+  if(buffer.indexOf("\n") < 1) return;
+
+  const block = buffer.split("\n");
+
+  const last = block.pop();
+
+  const jsons = block.map(JSON.parse);
+
+  if(last.indexOf("\n") < 0){
+    buffer = last;
+  }else{
+    if(last) jsons.push(JSON.parse(last));
+  }
+
+
+  jsons.forEach(d => {
+    ctx.beginPath();
+    geoPath(d);
+    ctx.stroke();
+    ctx.closePath();
+  });
+
+
+}
+
+
+    </script>
+  </body>
+</html

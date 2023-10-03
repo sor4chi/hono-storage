@@ -30,5 +30,10 @@
     "@types/supertest": "^2.0.12",
     "supertest": "^6.3.3",
     "vitest": "^0.34.5"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "hono@3.7.2": "../../patches/hono@3.7.2.patch"
+    }
   }
 }
