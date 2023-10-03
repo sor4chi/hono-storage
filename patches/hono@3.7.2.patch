@@ -1,0 +1,115 @@
+diff --git a/dist/request.js b/dist/request.js
+index 65015b6195b82fbc4b9c973cc7448326efa7209e..859bad973ee561d49143efb0d59151ec52143d4e 100644
+--- a/dist/request.js
++++ b/dist/request.js
+@@ -66,10 +66,10 @@ var HonoRequest = class {
+       return obj;
+     }
+   }
+-  async parseBody() {
++  async parseBody(options) {
+     if (this.bodyCache.parsedBody)
+       return this.bodyCache.parsedBody;
+-    const parsedBody = await parseBody(this);
++    const parsedBody = await parseBody(this, options);
+     this.bodyCache.parsedBody = parsedBody;
+     return parsedBody;
+   }
+diff --git a/dist/types/request.d.ts b/dist/types/request.d.ts
+index 02db8781fa54315bcfca1461efb45b1ffbfc8a0c..f00a4ee3e0bf85e49bfe592db1778addc6ecff32 100644
+--- a/dist/types/request.d.ts
++++ b/dist/types/request.d.ts
+@@ -1,5 +1,5 @@
+ import type { Input, InputToDataByTarget, ParamKeys, ParamKeyToRecord, RemoveQuestion, UndefinedIfHavingQuestion, ValidationTargets } from './types';
+-import type { BodyData } from './utils/body';
++import type { BodyData, ParseBodyOptions } from './utils/body';
+ import type { Cookie } from './utils/cookie';
+ import type { UnionToIntersection } from './utils/types';
+ declare type Body = {
+@@ -47,7 +47,7 @@ export declare class HonoRequest<P extends string = '/', I extends Input['out']
+      * app.get('/', (c) => c.json(getCookie(c)))
+      */
+     cookie(): Cookie;
+-    parseBody<T extends BodyData = BodyData>(): Promise<T>;
++    parseBody<T extends BodyData = BodyData>(options?: ParseBodyOptions): Promise<T>;
+     private cachedBody;
+     json<T = any>(): Promise<T>;
+     text(): Promise<string>;
+diff --git a/dist/types/utils/body.d.ts b/dist/types/utils/body.d.ts
+index 7d4b7ba05df758d4d3e6f881819f54c2698847c9..1300f78b9cc6d39ff2d72de2d6a178aa93a7f89f 100644
+--- a/dist/types/utils/body.d.ts
++++ b/dist/types/utils/body.d.ts
+@@ -1,3 +1,23 @@
+ import type { HonoRequest } from '../request';
+-export declare type BodyData = Record<string, string | string[] | File>;
+-export declare const parseBody: <T extends BodyData = BodyData>(request: HonoRequest | Request) => Promise<T>;
++export declare type BodyData = Record<string, string | File | (string | File)[]>;
++export declare type ParseBodyOptions = {
++    /**
++     * Parse all fields with multiple values should be parsed as an array.
++     * @default false
++     * @example
++     * ```ts
++     * const data = new FormData()
++     * data.append('file', 'aaa')
++     * data.append('file', 'bbb')
++     * data.append('message', 'hello')
++     * ```
++     *
++     * If `all` is `false`:
++     * parseBody should return `{ file: 'bbb', message: 'hello' }`
++     *
++     * If `all` is `true`:
++     * parseBody should return `{ file: ['aaa', 'bbb'], message: 'hello' }`
++     */
++    all?: boolean;
++};
++export declare const parseBody: <T extends BodyData = BodyData>(request: HonoRequest | Request, options?: ParseBodyOptions) => Promise<T>;
+diff --git a/dist/utils/body.js b/dist/utils/body.js
+index 6d9f0006a3a61083c08000063cc94f741c742649..238e7e9c2de0c7a3fd50988efd2b65b21b7e3071 100644
+--- a/dist/utils/body.js
++++ b/dist/utils/body.js
+@@ -1,5 +1,10 @@
+ // src/utils/body.ts
+-var parseBody = async (request) => {
++var isArrayField = (value) => {
++  return Array.isArray(value);
++};
++var parseBody = async (request, options = {
++  all: false
++}) => {
+   let body = {};
+   const contentType = request.headers.get("Content-Type");
+   if (contentType && (contentType.startsWith("multipart/form-data") || contentType.startsWith("application/x-www-form-urlencoded"))) {
+@@ -7,18 +12,21 @@ var parseBody = async (request) => {
+     if (formData) {
+       const form = {};
+       formData.forEach((value, key) => {
+-        if (key.slice(-2) === "[]") {
+-          if (!form[key]) {
+-            form[key] = [value.toString()];
+-          } else {
+-            if (Array.isArray(form[key])) {
+-              ;
+-              form[key].push(value.toString());
+-            }
+-          }
+-        } else {
++        const shouldParseAllValues = options.all || key.slice(-2) === "[]";
++        if (!shouldParseAllValues) {
+           form[key] = value;
++          return;
++        }
++        if (form[key] && isArrayField(form[key])) {
++          ;
++          form[key].push(value);
++          return;
++        }
++        if (form[key]) {
++          form[key] = [form[key], value];
++          return;
+         }
++        form[key] = value;
+       });
+       body = form;
+     }
