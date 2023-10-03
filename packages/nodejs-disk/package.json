@@ -8,7 +8,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "lint": "eslint --fix --ext .ts,.tsx src",
+    "lint:check": "eslint --ext .ts,.tsx src",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
     "test": "vitest",
     "build": "tsup ./src/index.ts --format esm,cjs --dts"
   },

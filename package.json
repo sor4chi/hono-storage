@@ -3,8 +3,12 @@
   "private": true,
   "scripts": {
     "lint": "turbo lint",
+    "lint:check": "turbo lint:check",
     "format": "turbo format",
-    "build": "turbo build"
+    "format:check": "turbo format:check",
+    "build": "turbo build",
+    "test": "turbo test",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",

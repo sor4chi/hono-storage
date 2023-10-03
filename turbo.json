@@ -6,7 +6,16 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "lint": {},
-    "format": {}
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "lint:check": {
+      "dependsOn": ["^build"]
+    },
+    "format": {},
+    "format:check": {},
+    "test": {
+      "dependsOn": ["^build"]
+    }
   }
 }
