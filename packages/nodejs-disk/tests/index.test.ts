@@ -89,23 +89,23 @@ describe("HonoStorage", () => {
       const server = createAdaptorServer(app);
       const res = await request(server)
         .post("/upload")
-        .attach("file", join(__dirname, "fixture/sample2.txt"))
-        .attach("file", join(__dirname, "fixture/sample3.txt"));
+        .attach("file", join(__dirname, "fixture/sample4.txt"))
+        .attach("file", join(__dirname, "fixture/sample5.txt"));
       expect(res.status).toBe(200);
       expect(res.text).toBe("Hello World");
 
       const files = await fs.readdir(join(__dirname, "tmp"));
-      expect(files).toEqual(["sample2.txt", "sample3.txt"]);
+      expect(files).toEqual(["sample4.txt", "sample5.txt"]);
 
-      const content1 = await fs.readFile(join(__dirname, "tmp/sample2.txt"), {
+      const content1 = await fs.readFile(join(__dirname, "tmp/sample4.txt"), {
         encoding: "utf-8",
       });
-      expect(content1).toBe("Hello Hono Storage 2\n");
+      expect(content1).toBe("Hello Hono Storage 4\n");
 
-      const content2 = await fs.readFile(join(__dirname, "tmp/sample3.txt"), {
+      const content2 = await fs.readFile(join(__dirname, "tmp/sample5.txt"), {
         encoding: "utf-8",
       });
-      expect(content2).toBe("Hello Hono Storage 3\n");
+      expect(content2).toBe("Hello Hono Storage 5\n");
     });
   });
 });
