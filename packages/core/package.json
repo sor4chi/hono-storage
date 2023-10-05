@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
     "build": "tsup ./src/index.ts --format esm,cjs --dts",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "keywords": [
     "hono"
