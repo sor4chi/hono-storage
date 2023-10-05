@@ -83,7 +83,7 @@ describe("HonoDiskStorage", () => {
         dest: join(__dirname, "tmp"),
       });
       const app = new Hono();
-      app.post("/upload", storage.multiple("file"), (c) =>
+      app.post("/upload", storage.array("file"), (c) =>
         c.text("Hello World"),
       );
       const server = createAdaptorServer(app);
