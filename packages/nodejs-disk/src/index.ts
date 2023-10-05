@@ -2,7 +2,7 @@ import { createWriteStream } from "fs";
 import { mkdir } from "fs/promises";
 import { join } from "path";
 
-import { HonoStorage } from "hono-storage";
+import { HonoStorage } from "@hono-storage/core";
 
 interface HonoDiskStorageOption {
   dest?: string;
