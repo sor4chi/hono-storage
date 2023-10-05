@@ -27,4 +27,21 @@ export class HonoStorage {
       await next();
     };
   };
+
+  array = (key: string, maxCount?: number): MiddlewareHandler => {
+    return async (c, next) => {
+      const formData = await c.req.parseBody({ all: true });
+      const files = formData[key];
+
+      if (Array.isArray(files) && files.some(isBlob)) {
+        const filteredFiles = files.filter(isBlob);
+        if (maxCount && filteredFiles.length > maxCount) {
+          throw new Error("Too many files");
+        }
+        await this.options.storage(c, filteredFiles as unknown as Blob[]);
+      }
+
+      await next();
+    };
+  };
 }
