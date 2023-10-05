@@ -122,30 +122,34 @@ describe("HonoStorage", () => {
       expect(await res.text()).toBe("Hello World");
     });
 
-    // it("can be filtered if the files is not a blob", async () => {
-    //   const storage = new HonoStorage({
-    //     storage: () => {},
-    //   });
-    //   const app = new Hono();
-    //   app.post("/upload", storage.multiple("file"), (c) =>
-    //     c.text("Hello World"),
-    //   );
+    it("can be filtered if the files is not a blob", async () => {
+      const storageHandler = vi.fn();
+      const storage = new HonoStorage({
+        storage: () => {
+          storageHandler();
+        },
+      });
+      const app = new Hono();
+      app.post("/upload", storage.multiple("file"), (c) =>
+        c.text("Hello World"),
+      );
 
-    //   const formData = new FormData();
+      const formData = new FormData();
 
-    //   formData.append("file", "Hello Hono Storage 1");
-    //   formData.append(
-    //     "file",
-    //     new Blob(["Hello Hono Storage 2"], { type: "text/plain" }),
-    //   );
+      formData.append("file", "Hello Hono Storage 1");
+      formData.append(
+        "file",
+        new Blob(["Hello Hono Storage 2"], { type: "text/plain" }),
+      );
 
-    //   const res = await app.request("http://localhost/upload", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
+      const res = await app.request("http://localhost/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-    //   expect(res.status).toBe(200);
-    //   expect(await res.text()).toBe("Hello World");
-    // });
+      expect(res.status).toBe(200);
+      expect(storageHandler).toBeCalledTimes(1);
+      expect(await res.text()).toBe("Hello World");
+    });
   });
 });
