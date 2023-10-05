@@ -1,5 +1,5 @@
 {
-  "name": "hono-storage",
+  "name": "@hono-storage/core",
   "version": "0.0.0",
   "type": "module",
   "main": "dist/index.js",

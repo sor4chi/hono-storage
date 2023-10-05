@@ -59,15 +59,15 @@ importers:
 
   examples/nodejs-disk:
     dependencies:
+      '@hono-storage/nodejs-disk':
+        specifier: workspace:*
+        version: link:../../packages/nodejs-disk
       '@hono/node-server':
         specifier: ^1.1.0
         version: 1.2.0
       hono:
         specifier: ^3.8.0-rc.1
         version: 3.8.0-rc.1
-      hono-storage-for-nodejs-disk:
-        specifier: workspace:*
-        version: link:../../packages/nodejs-disk
     devDependencies:
       tsx:
         specifier: ^3.12.2
@@ -88,15 +88,15 @@ importers:
 
   packages/nodejs-disk:
     dependencies:
+      '@hono-storage/core':
+        specifier: workspace:*
+        version: link:../core
       '@types/node':
         specifier: ^18.7.6
         version: 18.17.19
       hono:
         specifier: ^3.8.0-rc.1
         version: 3.8.0-rc.1
-      hono-storage:
-        specifier: workspace:*
-        version: link:../core
     devDependencies:
       '@hono/node-server':
         specifier: ^1.2.0

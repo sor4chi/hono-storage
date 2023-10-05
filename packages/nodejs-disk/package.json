@@ -1,5 +1,5 @@
 {
-  "name": "hono-storage-for-nodejs-disk",
+  "name": "@hono-storage/nodejs-disk",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -25,7 +25,7 @@
   "dependencies": {
     "@types/node": "^18.7.6",
     "hono": "^3.8.0-rc.1",
-    "hono-storage": "workspace:*"
+    "@hono-storage/core": "workspace:*"
   },
   "devDependencies": {
     "@hono/node-server": "^1.2.0",

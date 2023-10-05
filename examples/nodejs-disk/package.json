@@ -1,12 +1,12 @@
 {
-  "name": "hono-storage-nodejs-disk",
+  "name": "@hono-storage/nodejs-disk-example",
   "private": true,
   "scripts": {
     "start": "tsx src/index.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.1.0",
-    "hono-storage-for-nodejs-disk": "workspace:*",
+    "@hono-storage/nodejs-disk": "workspace:*",
     "hono": "^3.8.0-rc.1"
   },
   "devDependencies": {
