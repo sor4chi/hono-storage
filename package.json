@@ -26,10 +26,5 @@
     "typescript": "^5.2.2",
     "vitest": "^0.34.5",
     "vitest-environment-miniflare": "^2.14.1"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "hono@3.7.2": "patches/hono@3.7.2.patch"
-    }
   }
 }
