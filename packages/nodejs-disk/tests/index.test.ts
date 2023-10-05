@@ -5,14 +5,14 @@ import { createAdaptorServer } from "@hono/node-server";
 import { Hono } from "hono";
 import request from "supertest";
 
-import { HonoStorage } from "../src";
+import { HonoDiskStorage } from "../src";
 
-describe("HonoStorage", () => {
+describe("HonoDiskStorage", () => {
   it("should be able to create a new instance", () => {
-    const storage = new HonoStorage({
+    const storage = new HonoDiskStorage({
       dest: "/tmp",
     });
-    expect(storage).toBeInstanceOf(HonoStorage);
+    expect(storage).toBeInstanceOf(HonoDiskStorage);
   });
 
   describe("single", () => {
@@ -26,7 +26,7 @@ describe("HonoStorage", () => {
     });
 
     it("can be used as a single file upload middleware", async () => {
-      const storage = new HonoStorage({
+      const storage = new HonoDiskStorage({
         dest: join(__dirname, "tmp"),
       });
       const app = new Hono();
@@ -46,7 +46,7 @@ describe("HonoStorage", () => {
     });
 
     it("can be used as a multiple file upload middleware", async () => {
-      const storage = new HonoStorage({
+      const storage = new HonoDiskStorage({
         dest: join(__dirname, "tmp"),
       });
       const app = new Hono();
@@ -79,7 +79,7 @@ describe("HonoStorage", () => {
     });
 
     it("can be used as a multiple file upload middleware with same key", async () => {
-      const storage = new HonoStorage({
+      const storage = new HonoDiskStorage({
         dest: join(__dirname, "tmp"),
       });
       const app = new Hono();

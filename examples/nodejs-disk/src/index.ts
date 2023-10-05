@@ -2,10 +2,10 @@ import { join } from "path";
 
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { HonoStorage } from "hono-storage-for-nodejs-disk";
+import { HonoDiskStorage } from "hono-storage-for-nodejs-disk";
 
 const app = new Hono();
-const storage = new HonoStorage({
+const storage = new HonoDiskStorage({
   dest: join(__dirname, "tmp"),
 });
 

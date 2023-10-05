@@ -2,16 +2,16 @@ import { createWriteStream } from "fs";
 import { mkdir } from "fs/promises";
 import { join } from "path";
 
-import { HonoStorage as BaseHonoStorage } from "hono-storage";
+import { HonoStorage } from "hono-storage";
 
-interface HonoStorageOption {
+interface HonoDiskStorageOption {
   dest?: string;
 }
 
-export class HonoStorage extends BaseHonoStorage {
+export class HonoDiskStorage extends HonoStorage {
   private dest: string;
 
-  constructor(option: HonoStorageOption = {}) {
+  constructor(option: HonoDiskStorageOption = {}) {
     const { dest = "/tmp" } = option;
 
     super({
