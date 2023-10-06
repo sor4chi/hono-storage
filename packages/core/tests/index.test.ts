@@ -139,7 +139,6 @@ describe("HonoStorage", () => {
 
     it("should work if maxCount is set and the number of files is greater than maxCount", async () => {
       const storageHandler = vi.fn();
-      const onErr = vi.fn();
       const storage = new HonoStorage({
         storage: (_, files) => {
           files.forEach(() => {
@@ -151,10 +150,7 @@ describe("HonoStorage", () => {
       app.post("/upload", storage.array("file", 3), (c) =>
         c.text("Hello World"),
       );
-      app.onError((err, c) => {
-        onErr(err);
-        return c.text(err.message);
-      });
+      app.onError((err, c) => c.text(err.message, c.res.status));
 
       const formData = new FormData();
       for (let i = 0; i < 10; i++) {
@@ -171,8 +167,8 @@ describe("HonoStorage", () => {
         body: formData,
       });
 
+      expect(res.status).toBe(404);
       expect(storageHandler).toBeCalledTimes(0);
-      expect(onErr).toBeCalledTimes(1);
       expect(await res.text()).toBe("Too many files");
     });
   });
