@@ -59,12 +59,12 @@ export class HonoStorage {
 
       if (isBlob(file)) {
         await this.handleSingleStorage(c, file);
-      }
 
-      c.set(FILES_KEY, {
-        ...c.get(FILES_KEY),
-        [name]: file,
-      });
+        c.set(FILES_KEY, {
+          ...c.get(FILES_KEY),
+          [name]: file,
+        });
+      }
 
       await next();
     };
@@ -85,12 +85,12 @@ export class HonoStorage {
       if (Array.isArray(files) && files.some(isBlob)) {
         const filteredFiles = files.filter(isBlob) as unknown as Blob[];
         await this.handleArrayStorage(c, filteredFiles, maxCount);
-      }
 
-      c.set(FILES_KEY, {
-        ...c.get(FILES_KEY),
-        [name]: files,
-      });
+        c.set(FILES_KEY, {
+          ...c.get(FILES_KEY),
+          [name]: files,
+        });
+      }
 
       await next();
     };
@@ -107,18 +107,23 @@ export class HonoStorage {
       for (const { name, maxCount } of schema) {
         const formData = await c.req.parseBody({ all: true });
         const fileOrFiles = formData[name];
+        let isValidFile = false;
 
         if (Array.isArray(fileOrFiles) && fileOrFiles.some(isBlob)) {
           const filteredFiles = fileOrFiles.filter(isBlob) as unknown as Blob[];
           await this.handleArrayStorage(c, filteredFiles, maxCount);
+          isValidFile = true;
         } else if (isBlob(fileOrFiles)) {
           await this.handleSingleStorage(c, fileOrFiles);
+          isValidFile = true;
         }
 
-        c.set(FILES_KEY, {
-          ...c.get(FILES_KEY),
-          [name]: fileOrFiles,
-        });
+        if (isValidFile) {
+          c.set(FILES_KEY, {
+            ...c.get(FILES_KEY),
+            [name]: fileOrFiles,
+          });
+        }
       }
 
       await next();
