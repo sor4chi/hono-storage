@@ -20,6 +20,21 @@ export class HonoStorage {
     this.options = options;
   }
 
+  private handleSingle = async (c: Context, file: Blob): Promise<void> => {
+    await this.options.storage(c, [file]);
+  };
+
+  private handleArray = async (
+    c: Context,
+    files: Blob[],
+    maxCount?: number,
+  ): Promise<void> => {
+    if (maxCount && files.length > maxCount) {
+      throw new Error("Too many files");
+    }
+    await this.options.storage(c, files);
+  };
+
   single = (key: string): MiddlewareHandler => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
@@ -39,11 +54,8 @@ export class HonoStorage {
       const files = formData[key];
 
       if (Array.isArray(files) && files.some(isBlob)) {
-        const filteredFiles = files.filter(isBlob);
-        if (maxCount && filteredFiles.length > maxCount) {
-          throw new Error("Too many files");
-        }
-        await this.options.storage(c, filteredFiles as unknown as Blob[]);
+        const filteredFiles = files.filter(isBlob) as unknown as Blob[];
+        await this.handleArray(c, filteredFiles, maxCount);
       }
 
       await next();
@@ -57,13 +69,10 @@ export class HonoStorage {
         const fileOrFiles = formData[name];
 
         if (Array.isArray(fileOrFiles) && fileOrFiles.some(isBlob)) {
-          const filteredFiles = fileOrFiles.filter(isBlob);
-          if (maxCount && filteredFiles.length > maxCount) {
-            throw new Error("Too many files");
-          }
-          await this.options.storage(c, filteredFiles as unknown as Blob[]);
+          const filteredFiles = fileOrFiles.filter(isBlob) as unknown as Blob[];
+          await this.handleArray(c, filteredFiles, maxCount);
         } else if (isBlob(fileOrFiles)) {
-          await this.options.storage(c, [fileOrFiles]);
+          await this.handleSingle(c, fileOrFiles);
         }
       }
 
