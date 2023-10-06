@@ -172,4 +172,114 @@ describe("HonoStorage", () => {
       expect(await res.text()).toBe("Too many files");
     });
   });
+
+  describe("fields", () => {
+    it("should work with a single field", async () => {
+      const storageHandler = vi.fn();
+      const storage = new HonoStorage({
+        storage: (_, files) => {
+          files.forEach(() => {
+            storageHandler();
+          });
+        },
+      });
+      const app = new Hono();
+      app.post("/upload", storage.fields([{ name: "file" }]), (c) =>
+        c.text("Hello World"),
+      );
+
+      const formData = new FormData();
+      formData.append(
+        "file",
+        new Blob([`Hello Hono Storage 1`], {
+          type: "text/plain",
+        }),
+      );
+
+      const res = await app.request("http://localhost/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      expect(res.status).toBe(200);
+      expect(storageHandler).toBeCalledTimes(1);
+      expect(await res.text()).toBe("Hello World");
+    });
+
+    it("should work with a single field with maxCount", async () => {
+      const storageHandler = vi.fn();
+      const storage = new HonoStorage({
+        storage: (_, files) => {
+          files.forEach(() => {
+            storageHandler();
+          });
+        },
+      });
+      const app = new Hono();
+      app.post(
+        "/upload",
+        storage.fields([{ name: "file", maxCount: 3 }]),
+        (c) => c.text("Hello World"),
+      );
+
+      const formData = new FormData();
+      for (let i = 0; i < 2; i++) {
+        formData.append(
+          "file",
+          new Blob([`Hello Hono Storage ${i}`], {
+            type: "text/plain",
+          }),
+        );
+      }
+
+      const res = await app.request("http://localhost/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      expect(res.status).toBe(200);
+      expect(storageHandler).toBeCalledTimes(2);
+      expect(await res.text()).toBe("Hello World");
+    });
+
+    it("should work with multiple fields", async () => {
+      const storageHandler = vi.fn();
+      const storage = new HonoStorage({
+        storage: (_, files) => {
+          files.forEach(() => {
+            storageHandler();
+          });
+        },
+      });
+      const app = new Hono();
+      app.post(
+        "/upload",
+        storage.fields([
+          { name: "file1" },
+          { name: "file2" },
+          { name: "file3" },
+        ]),
+        (c) => c.text("Hello World"),
+      );
+
+      const formData = new FormData();
+      for (let i = 0; i < 3; i++) {
+        formData.append(
+          `file${i + 1}`,
+          new Blob([`Hello Hono Storage ${i}`], {
+            type: "text/plain",
+          }),
+        );
+      }
+
+      const res = await app.request("http://localhost/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      expect(res.status).toBe(200);
+      expect(storageHandler).toBeCalledTimes(3);
+      expect(await res.text()).toBe("Hello World");
+    });
+  });
 });
