@@ -1,4 +1,5 @@
 import type { MiddlewareHandler, Context } from "hono";
+import type { BodyData } from "hono/utils/body";
 
 export type HonoStorageOptions = {
   storage: (c: Context, files: Blob[]) => Promise<void> | void;
@@ -12,6 +13,8 @@ export type FieldSchema = {
 const isBlob = (value: unknown): value is Blob => {
   return value instanceof Blob;
 };
+
+export const FILES_KEY = "files";
 
 export class HonoStorage {
   options: HonoStorageOptions;
@@ -35,7 +38,13 @@ export class HonoStorage {
     await this.options.storage(c, files);
   };
 
-  single = (name: string): MiddlewareHandler => {
+  single = (
+    name: string,
+  ): MiddlewareHandler<{
+    Variables: {
+      [FILES_KEY]: BodyData;
+    };
+  }> => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
       const file = formData[name];
@@ -44,11 +53,23 @@ export class HonoStorage {
         await this.options.storage(c, [file]);
       }
 
+      c.set(FILES_KEY, {
+        ...c.get(FILES_KEY),
+        [name]: file,
+      });
+
       await next();
     };
   };
 
-  array = (name: string, maxCount?: number): MiddlewareHandler => {
+  array = (
+    name: string,
+    maxCount?: number,
+  ): MiddlewareHandler<{
+    Variables: {
+      [FILES_KEY]: BodyData;
+    };
+  }> => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
       const files = formData[name];
@@ -58,11 +79,22 @@ export class HonoStorage {
         await this.handleArray(c, filteredFiles, maxCount);
       }
 
+      c.set(FILES_KEY, {
+        ...c.get(FILES_KEY),
+        [name]: files,
+      });
+
       await next();
     };
   };
 
-  fields = (schema: FieldSchema[]): MiddlewareHandler => {
+  fields = (
+    schema: FieldSchema[],
+  ): MiddlewareHandler<{
+    Variables: {
+      [FILES_KEY]: BodyData;
+    };
+  }> => {
     return async (c, next) => {
       for (const { name, maxCount } of schema) {
         const formData = await c.req.parseBody({ all: true });
@@ -74,6 +106,11 @@ export class HonoStorage {
         } else if (isBlob(fileOrFiles)) {
           await this.handleSingle(c, fileOrFiles);
         }
+
+        c.set(FILES_KEY, {
+          ...c.get(FILES_KEY),
+          [name]: fileOrFiles,
+        });
       }
 
       await next();
