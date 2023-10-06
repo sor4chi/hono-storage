@@ -2,7 +2,7 @@ import type { MiddlewareHandler, Context } from "hono";
 import type { BodyData } from "hono/utils/body";
 
 export type HonoStorageOptions = {
-  storage: (c: Context, files: Blob[]) => Promise<void> | void;
+  storage?: (c: Context, files: Blob[]) => Promise<void> | void;
 };
 
 export type FieldSchema = {
@@ -19,15 +19,20 @@ export const FILES_KEY = "files";
 export class HonoStorage {
   options: HonoStorageOptions;
 
-  constructor(options: HonoStorageOptions) {
-    this.options = options;
+  constructor(options?: HonoStorageOptions) {
+    this.options = options ?? {};
   }
 
-  private handleSingle = async (c: Context, file: Blob): Promise<void> => {
-    await this.options.storage(c, [file]);
+  private handleSingleStorage = async (
+    c: Context,
+    file: Blob,
+  ): Promise<void> => {
+    if (this.options.storage) {
+      await this.options.storage(c, [file]);
+    }
   };
 
-  private handleArray = async (
+  private handleArrayStorage = async (
     c: Context,
     files: Blob[],
     maxCount?: number,
@@ -35,7 +40,10 @@ export class HonoStorage {
     if (maxCount && files.length > maxCount) {
       throw new Error("Too many files");
     }
-    await this.options.storage(c, files);
+
+    if (this.options.storage) {
+      await this.options.storage(c, files);
+    }
   };
 
   single = (
@@ -50,7 +58,7 @@ export class HonoStorage {
       const file = formData[name];
 
       if (isBlob(file)) {
-        await this.options.storage(c, [file]);
+        await this.handleSingleStorage(c, file);
       }
 
       c.set(FILES_KEY, {
@@ -76,7 +84,7 @@ export class HonoStorage {
 
       if (Array.isArray(files) && files.some(isBlob)) {
         const filteredFiles = files.filter(isBlob) as unknown as Blob[];
-        await this.handleArray(c, filteredFiles, maxCount);
+        await this.handleArrayStorage(c, filteredFiles, maxCount);
       }
 
       c.set(FILES_KEY, {
@@ -102,9 +110,9 @@ export class HonoStorage {
 
         if (Array.isArray(fileOrFiles) && fileOrFiles.some(isBlob)) {
           const filteredFiles = fileOrFiles.filter(isBlob) as unknown as Blob[];
-          await this.handleArray(c, filteredFiles, maxCount);
+          await this.handleArrayStorage(c, filteredFiles, maxCount);
         } else if (isBlob(fileOrFiles)) {
-          await this.handleSingle(c, fileOrFiles);
+          await this.handleSingleStorage(c, fileOrFiles);
         }
 
         c.set(FILES_KEY, {

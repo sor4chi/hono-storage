@@ -4,9 +4,7 @@ import { HonoStorage, FILES_KEY } from "../src";
 
 describe("HonoStorage", () => {
   it("should be able to create a new instance", () => {
-    const storage = new HonoStorage({
-      storage: () => {},
-    });
+    const storage = new HonoStorage();
     expect(storage).toBeInstanceOf(HonoStorage);
   });
 
@@ -65,9 +63,7 @@ describe("HonoStorage", () => {
     });
 
     it("can get the multipart/form-data from the context", async () => {
-      const storage = new HonoStorage({
-        storage: () => {},
-      });
+      const storage = new HonoStorage();
       const app = new Hono();
       app.post("/upload", storage.single("file"), (c) => {
         const files = c.get(FILES_KEY);
@@ -201,9 +197,7 @@ describe("HonoStorage", () => {
     });
 
     it("can get the multipart/form-data from the context", async () => {
-      const storage = new HonoStorage({
-        storage: () => {},
-      });
+      const storage = new HonoStorage();
       const app = new Hono();
       app.post("/upload", storage.array("file"), (c) => {
         const files = c.get(FILES_KEY);
