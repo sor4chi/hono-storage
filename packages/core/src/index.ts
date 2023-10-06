@@ -35,10 +35,10 @@ export class HonoStorage {
     await this.options.storage(c, files);
   };
 
-  single = (key: string): MiddlewareHandler => {
+  single = (name: string): MiddlewareHandler => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
-      const file = formData[key];
+      const file = formData[name];
 
       if (isBlob(file)) {
         await this.options.storage(c, [file]);
@@ -48,10 +48,10 @@ export class HonoStorage {
     };
   };
 
-  array = (key: string, maxCount?: number): MiddlewareHandler => {
+  array = (name: string, maxCount?: number): MiddlewareHandler => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
-      const files = formData[key];
+      const files = formData[name];
 
       if (Array.isArray(files) && files.some(isBlob)) {
         const filteredFiles = files.filter(isBlob) as unknown as Blob[];
