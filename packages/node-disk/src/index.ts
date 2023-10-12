@@ -40,7 +40,7 @@ export class HonoDiskStorage extends HonoStorage {
     this.dest = dest;
   }
 
-  private handleDestStorage = async (file: File) => {
+  handleDestStorage = async (file: File) => {
     const writeStream = createWriteStream(join(this.dest, file.name));
     const reader = file.stream().getReader();
     // eslint-disable-next-line no-constant-condition
