@@ -1,5 +1,5 @@
 import { serve } from "@hono/node-server";
-import { HonoDiskStorage } from "@hono-storage/nodejs-disk";
+import { HonoDiskStorage } from "@hono-storage/node-disk";
 import { Hono } from "hono";
 
 const app = new Hono();

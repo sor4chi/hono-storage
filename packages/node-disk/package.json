@@ -1,5 +1,5 @@
 {
-  "name": "@hono-storage/nodejs-disk",
+  "name": "@hono-storage/node-disk",
   "private": true,
   "version": "0.0.0",
   "type": "module",

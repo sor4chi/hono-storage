@@ -59,9 +59,9 @@ importers:
 
   examples/nodejs-disk:
     dependencies:
-      '@hono-storage/nodejs-disk':
+      '@hono-storage/node-disk':
         specifier: workspace:*
-        version: link:../../packages/nodejs-disk
+        version: link:../../packages/node-disk
       '@hono/node-server':
         specifier: ^1.1.0
         version: 1.2.0
@@ -86,7 +86,7 @@ importers:
         specifier: ^22.1.0
         version: 22.1.0
 
-  packages/nodejs-disk:
+  packages/node-disk:
     dependencies:
       '@hono-storage/core':
         specifier: workspace:*
