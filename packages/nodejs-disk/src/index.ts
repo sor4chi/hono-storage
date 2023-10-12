@@ -3,11 +3,14 @@ import { mkdir } from "fs/promises";
 import { join } from "path";
 
 import { HonoStorage } from "@hono-storage/core";
+import { File } from "@web-std/file";
 import { Context } from "hono";
+
+import { HDSFile } from "./file";
 
 interface HonoDiskStorageOption {
   dest?: string;
-  filename?: (c: Context, file: Blob) => string;
+  filename?: (c: Context, file: HDSFile) => string;
 }
 
 export class HonoDiskStorage extends HonoStorage {
@@ -24,10 +27,11 @@ export class HonoDiskStorage extends HonoStorage {
           files.map(async (file) => {
             if (option.filename) {
               await this.handleDestStorage(
-                new File([file], option.filename(c, file)),
+                new File([file], option.filename(c, new HDSFile(file))),
               );
+            } else {
+              await this.handleDestStorage(new File([file], file.name));
             }
-            await this.handleDestStorage(file);
           }),
         );
       },
@@ -36,7 +40,7 @@ export class HonoDiskStorage extends HonoStorage {
     this.dest = dest;
   }
 
-  private handleDestStorage = async (file: Blob) => {
+  private handleDestStorage = async (file: File) => {
     const writeStream = createWriteStream(join(this.dest, file.name));
     const reader = file.stream().getReader();
     // eslint-disable-next-line no-constant-condition
