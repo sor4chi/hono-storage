@@ -36,6 +36,40 @@ describe("HonoStorage", () => {
       expect(await res.text()).toBe("Hello World");
     });
 
+    it("should work with single chain", async () => {
+      const storageHandler = vi.fn();
+      const storage = new HonoStorage({
+        storage: (_, files) => {
+          files.forEach(() => {
+            storageHandler();
+          });
+        },
+      });
+      const app = new Hono();
+      app.post(
+        "/upload",
+        storage.single("file1"),
+        storage.single("file2"),
+        (c) => c.text("Hello World"),
+      );
+
+      const formData = new FormData();
+
+      const file1 = new Blob(["Hello Hono Storage 1"]);
+      const file2 = new Blob(["Hello Hono Storage 2"]);
+      formData.append("file1", file1);
+      formData.append("file2", file2);
+
+      const res = await app.request("http://localhost/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      expect(res.status).toBe(200);
+      expect(storageHandler).toBeCalledTimes(2);
+      expect(await res.text()).toBe("Hello World");
+    });
+
     it("can be through if the file is not a blob", async () => {
       const storageHandler = vi.fn();
       const storage = new HonoStorage({

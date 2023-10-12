@@ -3,9 +3,11 @@ import { mkdir } from "fs/promises";
 import { join } from "path";
 
 import { HonoStorage } from "@hono-storage/core";
+import { Context } from "hono";
 
 interface HonoDiskStorageOption {
   dest?: string;
+  filename?: (c: Context, file: Blob) => string;
 }
 
 export class HonoDiskStorage extends HonoStorage {
@@ -20,6 +22,11 @@ export class HonoDiskStorage extends HonoStorage {
 
         await Promise.all(
           files.map(async (file) => {
+            if (option.filename) {
+              await this.handleDestStorage(
+                new File([file], option.filename(c, file)),
+              );
+            }
             await this.handleDestStorage(file);
           }),
         );
