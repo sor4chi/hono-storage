@@ -35,8 +35,8 @@ const storage = new HonoStorage({
 });
 
 /** If you use HonoStorage for Node.js */
-import { HonoStorage } from "@hono-storage/node-disk";
-const storage = new HonoStorage({
+import { HonoDiskStorage } from "@hono-storage/node-disk";
+const storage = new HonoDiskStorage({
   dest: "./uploads",
   filename: (c, file) => `${file.originalname}-${Date.now()}.${file.extension}`,
 });
