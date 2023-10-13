@@ -8,29 +8,35 @@ import { Context } from "hono";
 
 import { HDSFile } from "./file";
 
+type HDSCustomFunction = (c: Context, file: HDSFile) => string;
+
 interface HonoDiskStorageOption {
-  dest?: string;
-  filename?: (c: Context, file: HDSFile) => string;
+  dest?: string | HDSCustomFunction;
+  filename?: HDSCustomFunction;
 }
 
 export class HonoDiskStorage extends HonoStorage {
-  private dest: string;
+  private dest: string | ((c: Context, file: HDSFile) => string);
 
   constructor(option: HonoDiskStorageOption = {}) {
     const { dest = "/tmp" } = option;
 
     super({
       storage: async (c, files) => {
-        await mkdir(this.dest, { recursive: true });
-
         await Promise.all(
           files.map(async (file) => {
+            const dest =
+              typeof this.dest === "function"
+                ? this.dest(c, new HDSFile(file))
+                : this.dest;
+            await mkdir(dest, { recursive: true });
             if (option.filename) {
               await this.handleDestStorage(
+                dest,
                 new File([file], option.filename(c, new HDSFile(file))),
               );
             } else {
-              await this.handleDestStorage(new File([file], file.name));
+              await this.handleDestStorage(dest, new File([file], file.name));
             }
           }),
         );
@@ -40,8 +46,8 @@ export class HonoDiskStorage extends HonoStorage {
     this.dest = dest;
   }
 
-  handleDestStorage = async (file: File) => {
-    const writeStream = createWriteStream(join(this.dest, file.name));
+  handleDestStorage = async (dest: string, file: File) => {
+    const writeStream = createWriteStream(join(dest, file.name));
     const reader = file.stream().getReader();
     // eslint-disable-next-line no-constant-condition
     while (true) {
