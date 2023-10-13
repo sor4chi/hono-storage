@@ -61,3 +61,13 @@ app.post("/upload/vars", storage.single("image"), (c) => {
 
 // serve app
 ```
+
+You want to find more? Check out the [examples](./examples)!
+
+## License
+
+[MIT](./LICENSE)
+
+## Contributing
+
+This project is open for contributions. Feel free to open an issue or a pull request!
