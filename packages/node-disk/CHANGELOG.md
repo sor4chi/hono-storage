@@ -1,5 +1,32 @@
 # @hono-storage/node-disk
 
+## 0.0.2
+
+### Patch Changes
+
+- [#3](https://github.com/sor4chi/hono-storage/pull/3) [`da24913`](https://github.com/sor4chi/hono-storage/commit/da249130275d6a2c2827f17cdd1778bfb2fe34f9) Thanks [@sor4chi](https://github.com/sor4chi)! - Support more dynamic dest path.
+  You can decide the dest path by the context and file.
+
+  ## Before
+
+  ```ts
+  const storage = new NodeDiskStorage({
+    dest: "/path/to/dest",
+  });
+  ```
+
+  ## After
+
+  Also support function.
+
+  ```ts
+  const storage = new NodeDiskStorage({
+    dest: (c, file) => {
+      return "/path/to/dest";
+    },
+  });
+  ```
+
 ## 0.0.1
 
 ### Patch Changes

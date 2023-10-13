@@ -1,6 +1,6 @@
 {
   "name": "@hono-storage/node-disk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
