@@ -82,6 +82,19 @@ importers:
         specifier: ^3.8.0-rc.1
         version: 3.8.0-rc.1
 
+  packages/memory:
+    dependencies:
+      '@hono-storage/core':
+        specifier: workspace:*
+        version: link:../core
+      hono:
+        specifier: ^3.8.0-rc.1
+        version: 3.8.0-rc.1
+    devDependencies:
+      vitest:
+        specifier: ^0.34.5
+        version: 0.34.5
+
   packages/node-disk:
     dependencies:
       '@hono-storage/core':

@@ -1,0 +1,28 @@
+{
+  "name": "@hono-storage/memory",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "lint": "eslint --fix --ext .ts,.tsx src",
+    "lint:check": "eslint --ext .ts,.tsx src",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
+    "build": "tsup ./src/index.ts --format esm,cjs --dts",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "hono"
+  ],
+  "author": "sor4chi",
+  "license": "MIT",
+  "dependencies": {
+    "@hono-storage/core": "workspace:*",
+    "hono": "^3.8.0-rc.1"
+  },
+  "devDependencies": {
+    "vitest": "^0.34.5"
+  }
+}
