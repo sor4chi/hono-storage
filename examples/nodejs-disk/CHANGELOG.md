@@ -1,5 +1,12 @@
 # @hono-storage/node-disk-example
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @hono-storage/node-disk@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes

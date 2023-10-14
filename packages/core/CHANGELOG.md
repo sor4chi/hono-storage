@@ -1,5 +1,20 @@
 # @hono-storage/core
 
+## 0.0.2
+
+### Patch Changes
+
+- [#7](https://github.com/sor4chi/hono-storage/pull/7) [`ea1eb7a`](https://github.com/sor4chi/hono-storage/commit/ea1eb7a533b8ba3d08acc80f92b8153a9048bfc9) Thanks [@sor4chi](https://github.com/sor4chi)! - file helper for HonoStorage
+
+  ```ts
+  import { HonoStorageFile } from "@hono-storage/core";
+
+  const file = new File([blob], "filename.ext.zip");
+  const HSfile = new HonoStorageFile(file);
+  HSfile.originalname; // => name part of file (filename.ext)
+  HSfile.extensiton; // => extension part of file (.zip)
+  ```
+
 ## 0.0.1
 
 ### Patch Changes
