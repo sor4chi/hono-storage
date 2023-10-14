@@ -1,7 +1,7 @@
 import { File } from "@web-std/file";
 
-export class HDSFile extends File {
-  constructor(file: Blob) {
+export class HonoStorageFile extends File {
+  constructor(file: Blob | File) {
     super([file], file.name);
   }
 
