@@ -119,9 +119,6 @@ importers:
       supertest:
         specifier: ^6.3.3
         version: 6.3.3
-      vitest:
-        specifier: ^0.34.5
-        version: 0.34.5
 
 packages:
 
