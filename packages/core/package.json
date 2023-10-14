@@ -19,6 +19,7 @@
   "author": "sor4chi",
   "license": "MIT",
   "dependencies": {
+    "@web-std/file": "^3.0.3",
     "hono": "^3.8.0-rc.1"
   },
   "devDependencies": {
