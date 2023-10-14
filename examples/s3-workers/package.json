@@ -1,0 +1,16 @@
+{
+  "name": "@hono-storage/s3-workers-example",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.428.0",
+    "@hono-storage/s3": "workspace:*",
+    "hono": "^3.8.0-rc.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230914.0",
+    "wrangler": "^3.9.0"
+  }
+}
