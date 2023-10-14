@@ -1,9 +1,10 @@
+import { HonoStorageFile } from "./file";
+
 import type { MiddlewareHandler, Context } from "hono";
 import type { BodyData } from "hono/utils/body";
-// import { File } from "@web-std/file";
 
 export type HonoStorageOptions = {
-  storage?: (c: Context, files: File[]) => Promise<void> | void;
+  storage?: (c: Context, files: HonoStorageFile[]) => Promise<void> | void;
 };
 
 export type FieldSchema = {
@@ -31,7 +32,7 @@ export class HonoStorage {
     file: File,
   ): Promise<void> => {
     if (this.options.storage) {
-      await this.options.storage(c, [file]);
+      await this.options.storage(c, [new HonoStorageFile(file)]);
     }
   };
 
@@ -45,7 +46,10 @@ export class HonoStorage {
     }
 
     if (this.options.storage) {
-      await this.options.storage(c, files);
+      await this.options.storage(
+        c,
+        files.map((file) => new HonoStorageFile(file)),
+      );
     }
   };
 
