@@ -23,11 +23,11 @@
   "license": "MIT",
   "dependencies": {
     "@hono-storage/core": "workspace:*",
-    "@types/node": "^18.7.6",
     "@web-std/file": "^3.0.3",
     "hono": "^3.8.0-rc.1"
   },
   "devDependencies": {
+    "@types/node": "^18.7.6",
     "@hono/node-server": "^1.2.0",
     "@types/supertest": "^2.0.12",
     "supertest": "^6.3.3",

@@ -75,9 +75,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@web-std/file':
-        specifier: ^3.0.3
-        version: 3.0.3
       hono:
         specifier: ^3.8.0-rc.1
         version: 3.8.0-rc.1
@@ -87,9 +84,6 @@ importers:
       '@hono-storage/core':
         specifier: workspace:*
         version: link:../core
-      '@types/node':
-        specifier: ^18.7.6
-        version: 18.17.19
       '@web-std/file':
         specifier: ^3.0.3
         version: 3.0.3
@@ -100,6 +94,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.2.0
         version: 1.2.0
+      '@types/node':
+        specifier: ^18.7.6
+        version: 18.17.19
       '@types/supertest':
         specifier: ^2.0.12
         version: 2.0.12
@@ -902,6 +899,7 @@ packages:
 
   /@types/node@18.17.19:
     resolution: {integrity: sha512-+pMhShR3Or5GR0/sp4Da7FnhVmTalWm81M6MkEldbwjETSaPalw138Z4KdpQaistvqQxLB7Cy4xwYdxpbSOs9Q==}
+    dev: true
 
   /@types/normalize-package-data@2.4.2:
     resolution: {integrity: sha512-lqa4UEhhv/2sjjIQgjX8B+RBjj47eo0mzGasklVJ78UKGQY1r0VpB9XHDaZZO9qzEFDdy4MrXLuEaSmPrPSe/A==}
