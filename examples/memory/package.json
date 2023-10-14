@@ -1,0 +1,16 @@
+{
+  "name": "@hono-storage/memory-example",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.1.0",
+    "@hono-storage/memory": "workspace:*",
+    "hono": "^3.8.0-rc.1"
+  },
+  "devDependencies": {
+    "tsx": "^3.12.2"
+  }
+}
