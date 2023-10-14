@@ -1,7 +1,7 @@
 import { File } from "@web-std/file";
 import { Hono } from "hono";
 
-import { HonoStorage, FILES_KEY } from "../src";
+import { HonoStorage, FILES_KEY } from "../src/storage";
 
 describe("HonoStorage", () => {
   it("should be able to create a new instance", () => {
