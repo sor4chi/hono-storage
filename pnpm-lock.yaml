@@ -75,6 +75,9 @@ importers:
 
   packages/core:
     dependencies:
+      '@web-std/file':
+        specifier: ^3.0.3
+        version: 3.0.3
       hono:
         specifier: ^3.8.0-rc.1
         version: 3.8.0-rc.1
