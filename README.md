@@ -16,7 +16,9 @@ npm install @hono-storage/core
 you can use helper to install storage for Hono.
 
 ```bash
-npm install @hono-storage/node-disk
+npm install @hono-storage/node-disk # for nodejs disk storage
+npm install @hono-storage/memory # for in-memory storage
+npm install @hono-storage/s3 # for s3 storage
 ```
 
 ## Usage
