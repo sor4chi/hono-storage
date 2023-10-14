@@ -1,3 +1,4 @@
+import { File } from "@web-std/file";
 import { Hono } from "hono";
 
 import { HonoStorage, FILES_KEY } from "../src";
@@ -23,7 +24,7 @@ describe("HonoStorage", () => {
 
       const formData = new FormData();
 
-      const file = new Blob(["Hello Hono Storage 1"], { type: "text/plain" });
+      const file = new File(["Hello Hono Storage 1"], "sample1.txt");
       formData.append("file", file);
 
       const res = await app.request("http://localhost/upload", {
@@ -55,8 +56,8 @@ describe("HonoStorage", () => {
 
       const formData = new FormData();
 
-      const file1 = new Blob(["Hello Hono Storage 1"]);
-      const file2 = new Blob(["Hello Hono Storage 2"]);
+      const file1 = new File(["Hello Hono Storage 1"], "sample1.txt");
+      const file2 = new File(["Hello Hono Storage 2"], "sample2.txt");
       formData.append("file1", file1);
       formData.append("file2", file2);
 
@@ -106,7 +107,7 @@ describe("HonoStorage", () => {
 
       const formData = new FormData();
 
-      const file = new Blob(["Hello Hono Storage 1"], { type: "text/plain" });
+      const file = new File(["Hello Hono Storage 1"], "sample1.txt");
       formData.append("file", file);
 
       const res = await app.request("http://localhost/upload", {
@@ -135,9 +136,7 @@ describe("HonoStorage", () => {
       for (let i = 0; i < 10; i++) {
         formData.append(
           "file",
-          new Blob([`Hello Hono Storage ${i}`], {
-            type: "text/plain",
-          }),
+          new File([`Hello Hono Storage ${i}`], `sample${i}.txt`),
         );
       }
 
@@ -174,9 +173,7 @@ describe("HonoStorage", () => {
       for (let i = 0; i < 2; i++) {
         formData.append(
           "file",
-          new Blob([`Hello Hono Storage ${i}`], {
-            type: "text/plain",
-          }),
+          new File([`Hello Hono Storage ${i}`], `sample${i}.txt`),
         );
       }
 
@@ -213,9 +210,7 @@ describe("HonoStorage", () => {
       for (let i = 0; i < 10; i++) {
         formData.append(
           "file",
-          new Blob([`Hello Hono Storage ${i}`], {
-            type: "text/plain",
-          }),
+          new File([`Hello Hono Storage ${i}`], `sample${i}.txt`),
         );
       }
 
@@ -242,9 +237,7 @@ describe("HonoStorage", () => {
       for (let i = 0; i < 10; i++) {
         formData.append(
           "file",
-          new Blob([`Hello Hono Storage ${i}`], {
-            type: "text/plain",
-          }),
+          new File([`Hello Hono Storage ${i}`], `sample${i}.txt`),
         );
       }
 
@@ -276,9 +269,7 @@ describe("HonoStorage", () => {
       const formData = new FormData();
       formData.append(
         "file",
-        new Blob([`Hello Hono Storage 1`], {
-          type: "text/plain",
-        }),
+        new File([`Hello Hono Storage 1`], "sample1.txt"),
       );
 
       const res = await app.request("http://localhost/upload", {
@@ -311,9 +302,7 @@ describe("HonoStorage", () => {
       for (let i = 0; i < 2; i++) {
         formData.append(
           "file",
-          new Blob([`Hello Hono Storage ${i}`], {
-            type: "text/plain",
-          }),
+          new File([`Hello Hono Storage ${i}`], "sample1.txt"),
         );
       }
 
@@ -351,9 +340,7 @@ describe("HonoStorage", () => {
       for (let i = 0; i < 3; i++) {
         formData.append(
           `file${i + 1}`,
-          new Blob([`Hello Hono Storage ${i}`], {
-            type: "text/plain",
-          }),
+          new File([`Hello Hono Storage ${i}`], `sample${i}.txt`),
         );
       }
 
@@ -394,9 +381,7 @@ describe("HonoStorage", () => {
       for (let i = 0; i < 3; i++) {
         formData.append(
           `file${i + 1}`,
-          new Blob([`Hello Hono Storage ${i}`], {
-            type: "text/plain",
-          }),
+          new File([`Hello Hono Storage ${i}`], `sample${i}.txt`),
         );
       }
 

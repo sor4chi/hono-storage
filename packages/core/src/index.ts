@@ -1,8 +1,9 @@
 import type { MiddlewareHandler, Context } from "hono";
 import type { BodyData } from "hono/utils/body";
+// import { File } from "@web-std/file";
 
 export type HonoStorageOptions = {
-  storage?: (c: Context, files: Blob[]) => Promise<void> | void;
+  storage?: (c: Context, files: File[]) => Promise<void> | void;
 };
 
 export type FieldSchema = {
@@ -10,8 +11,10 @@ export type FieldSchema = {
   maxCount?: number;
 };
 
-const isBlob = (value: unknown): value is Blob => {
-  return value instanceof Blob;
+const isFile = (value: unknown): value is File => {
+  if (typeof value !== "object" || value === null) return false;
+  // HELP ME: instanceof File is not working because node <= 20 doesn't have File :(
+  return value instanceof Blob && value.constructor.name === "File";
 };
 
 export const FILES_KEY = "files";
@@ -25,7 +28,7 @@ export class HonoStorage {
 
   private handleSingleStorage = async (
     c: Context,
-    file: Blob,
+    file: File,
   ): Promise<void> => {
     if (this.options.storage) {
       await this.options.storage(c, [file]);
@@ -34,7 +37,7 @@ export class HonoStorage {
 
   private handleArrayStorage = async (
     c: Context,
-    files: Blob[],
+    files: File[],
     maxCount?: number,
   ): Promise<void> => {
     if (maxCount && files.length > maxCount) {
@@ -57,7 +60,7 @@ export class HonoStorage {
       const formData = await c.req.parseBody({ all: true });
       const file = formData[name];
 
-      if (isBlob(file)) {
+      if (isFile(file)) {
         await this.handleSingleStorage(c, file);
 
         c.set(FILES_KEY, {
@@ -82,8 +85,8 @@ export class HonoStorage {
       const formData = await c.req.parseBody({ all: true });
       const files = formData[name];
 
-      if (Array.isArray(files) && files.some(isBlob)) {
-        const filteredFiles = files.filter(isBlob) as unknown as Blob[];
+      if (Array.isArray(files) && files.some(isFile)) {
+        const filteredFiles = files.filter(isFile) as unknown as File[];
         await this.handleArrayStorage(c, filteredFiles, maxCount);
 
         c.set(FILES_KEY, {
@@ -109,11 +112,11 @@ export class HonoStorage {
         const fileOrFiles = formData[name];
         let isValidFile = false;
 
-        if (Array.isArray(fileOrFiles) && fileOrFiles.some(isBlob)) {
-          const filteredFiles = fileOrFiles.filter(isBlob) as unknown as Blob[];
+        if (Array.isArray(fileOrFiles) && fileOrFiles.some(isFile)) {
+          const filteredFiles = fileOrFiles.filter(isFile) as unknown as File[];
           await this.handleArrayStorage(c, filteredFiles, maxCount);
           isValidFile = true;
-        } else if (isBlob(fileOrFiles)) {
+        } else if (isFile(fileOrFiles)) {
           await this.handleSingleStorage(c, fileOrFiles);
           isValidFile = true;
         }
