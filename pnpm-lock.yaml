@@ -89,6 +89,28 @@ importers:
         specifier: ^3.12.2
         version: 3.13.0
 
+  examples/r2-node:
+    dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.428.0
+        version: 3.428.0
+      '@hono-storage/s3':
+        specifier: workspace:*
+        version: link:../../packages/s3
+      '@hono/node-server':
+        specifier: ^1.1.0
+        version: 1.2.0
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
+      hono:
+        specifier: ^3.8.0-rc.1
+        version: 3.8.0-rc.1
+    devDependencies:
+      tsx:
+        specifier: ^3.12.2
+        version: 3.13.0
+
   examples/s3-node:
     dependencies:
       '@aws-sdk/client-s3':
