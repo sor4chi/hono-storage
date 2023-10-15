@@ -18,7 +18,7 @@ you can use helper to install storage for Hono.
 ```bash
 npm install @hono-storage/node-disk # for nodejs disk storage
 npm install @hono-storage/memory # for in-memory storage
-npm install @hono-storage/s3 # for s3 storage
+npm install @hono-storage/s3 # for s3 storage (or r2 storage)
 ```
 
 ## Usage
@@ -95,17 +95,28 @@ app.post("/upload/vars", storage.single("image"), (c) => {
 </details>
 
 <details>
-  <summary>S3 Storage</summary>
+  <summary>S3 / R2 Storage</summary>
 
   ```ts
   import { S3Client } from "@aws-sdk/client-s3";
   import { HonoS3Storage } from "@hono-storage/s3";
 
+  /** if you use S3 */
   const client = new S3Client({
     region: "[your-bucket-region]",
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      accessKeyId: AWS_ACCESS_KEY_ID,
+      secretAccessKey: AWS_SECRET_ACCESS_KEY,
+    },
+  });
+
+  /** if you use R2 */
+  const client = new S3Client({
+    region: "auto",
+    endpoint: `https://${ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: ACCESS_KEY_ID,
+      secretAccessKey: SECRET_ACCESS_KEY,
     },
   });
 
