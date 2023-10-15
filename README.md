@@ -95,7 +95,7 @@ app.post("/upload/vars", storage.single("image"), (c) => {
 </details>
 
 <details>
-  <summary>S3 / R2 Storage</summary>
+  <summary>S3 Storage (Also R2)</summary>
 
   ```ts
   import { S3Client } from "@aws-sdk/client-s3";
