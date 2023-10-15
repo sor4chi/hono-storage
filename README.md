@@ -43,6 +43,30 @@ const storage = new HonoDiskStorage({
   filename: (c, file) => `${file.originalname}-${Date.now()}.${file.extension}`,
 });
 
+/** If you use HonoStorage for in-memory */
+import { HonoMemoryStorage } from "@hono-storage/memory";
+const storage = new HonoMemoryStorage({
+  key: (c, file) => `${file.originalname}-${new Date()}`,
+});
+
+/** If you use HonoStorage for S3 */
+import { S3Client } from "@aws-sdk/client-s3";
+import { HonoS3Storage } from "@hono-storage/s3";
+
+const client = new S3Client({
+  region: "[your-bucket-region]",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
+
+const storage = new HonoS3Storage({
+  key: (_, file) => `${file.originalname}-${new Date().getTime()}`,
+  bucket: "[your-bucket-name]",
+  client,
+});
+
 app.post("/upload/single", storage.single("image"), (c) => c.text("OK"));
 app.post("/upload/array", storage.array("pictures"), (c) => c.text("OK"));
 app.post(
