@@ -10,7 +10,7 @@
     "@hono-storage/s3": "workspace:*",
     "@hono/node-server": "^1.1.0",
     "dotenv": "^16.3.1",
-    "hono": "^3.8.0-rc.1"
+    "hono": "^3.8.1"
   },
   "devDependencies": {
     "tsx": "^3.12.2"

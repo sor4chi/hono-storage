@@ -24,6 +24,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.428.0",
     "@hono-storage/core": "workspace:*",
-    "hono": "^3.8.0-rc.1"
+    "hono": "^3.8.1"
   }
 }

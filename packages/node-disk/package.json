@@ -24,7 +24,7 @@
   "dependencies": {
     "@hono-storage/core": "workspace:*",
     "@web-std/file": "^3.0.3",
-    "hono": "^3.8.0-rc.1"
+    "hono": "^3.8.1"
   },
   "devDependencies": {
     "@hono/node-server": "^1.2.0",
