@@ -75,7 +75,7 @@ app.post("/upload/vars", storage.single("image"), (c) => {
 
   const storage = new HonoDiskStorage({
     dest: "./uploads",
-    filename: (c, file) => `${file.originalname}-${Date.now()}.${file.extension}`,
+    filename: (c, file) => `${file.originalname}-${new Date().getTime()}.${file.extension}`,
   });
 ```
 
@@ -88,7 +88,7 @@ app.post("/upload/vars", storage.single("image"), (c) => {
   import { HonoMemoryStorage } from "@hono-storage/memory";
 
   const storage = new HonoMemoryStorage({
-    key: (c, file) => `${file.originalname}-${new Date()}`,
+    key: (c, file) => `${file.originalname}-${new Date().getTime()}`,
   });
   ```
 
