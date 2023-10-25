@@ -4,7 +4,7 @@ import { Hono } from "hono";
 
 const app = new Hono();
 const storage = new HonoMemoryStorage({
-  key: (c, file) => `${file.originalname}-${new Date()}`,
+  key: (c, file) => `${file.originalname}-${new Date().getTime()}`,
 });
 
 app.post("/", storage.single("file"), (c) => c.text("OK"));
