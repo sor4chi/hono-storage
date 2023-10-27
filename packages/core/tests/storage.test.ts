@@ -51,7 +51,14 @@ describe("HonoStorage", () => {
         "/upload",
         storage.single("file1"),
         storage.single("file2"),
-        (c) => c.text("Hello World"),
+        (c) => {
+          const files = c.var[FILES_KEY];
+          return c.text(
+            files.file1 && files.file2
+              ? "All files exist"
+              : "File does not exist",
+          );
+        },
       );
 
       const formData = new FormData();
@@ -68,7 +75,7 @@ describe("HonoStorage", () => {
 
       expect(res.status).toBe(200);
       expect(storageHandler).toBeCalledTimes(2);
-      expect(await res.text()).toBe("Hello World");
+      expect(await res.text()).toBe("All files exist");
     });
 
     it("can be through if the file is not a blob", async () => {
