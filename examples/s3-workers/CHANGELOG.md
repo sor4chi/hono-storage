@@ -1,5 +1,12 @@
 # @hono-storage/s3-workers-example
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @hono-storage/s3@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes

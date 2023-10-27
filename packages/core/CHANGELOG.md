@@ -1,5 +1,13 @@
 # @hono-storage/core
 
+## 0.0.4
+
+### Patch Changes
+
+- [#24](https://github.com/sor4chi/hono-storage/pull/24) [`07d2d99`](https://github.com/sor4chi/hono-storage/commit/07d2d99cdf20a1694cc03c965da773754ad6fa61) Thanks [@sor4chi](https://github.com/sor4chi)! - ## `storage.field` performance improvement
+
+  `storage.field` is able to upload each fields in parallel now.
+
 ## 0.0.3
 
 ### Patch Changes
