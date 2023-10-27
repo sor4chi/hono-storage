@@ -101,7 +101,7 @@ describe("HonoStorage", () => {
       const storage = new HonoStorage();
       const app = new Hono();
       app.post("/upload", storage.single("file"), (c) => {
-        const files = c.get(FILES_KEY);
+        const files = c.var[FILES_KEY];
         return c.text(files.file ? "File exists" : "File does not exist");
       });
 
@@ -229,7 +229,7 @@ describe("HonoStorage", () => {
       const storage = new HonoStorage();
       const app = new Hono();
       app.post("/upload", storage.array("file"), (c) => {
-        const files = c.get(FILES_KEY);
+        const files = c.var[FILES_KEY];
         return c.text(`${files.file.length} files`);
       });
 
@@ -372,7 +372,7 @@ describe("HonoStorage", () => {
           { name: "file3" },
         ]),
         (c) => {
-          const files = c.get(FILES_KEY);
+          const files = c.var[FILES_KEY];
           return c.text(files.file1 ? "File exists" : "File does not exist");
         },
       );
