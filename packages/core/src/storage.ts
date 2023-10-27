@@ -39,12 +39,7 @@ export class HonoStorage {
   private handleArrayStorage = async (
     c: Context,
     files: File[],
-    maxCount?: number,
   ): Promise<void> => {
-    if (maxCount && files.length > maxCount) {
-      throw new Error("Too many files");
-    }
-
     if (this.options.storage) {
       await this.options.storage(
         c,
@@ -62,16 +57,19 @@ export class HonoStorage {
   }> => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
-      const file = formData[name];
+      const fileOrFiles = formData[name];
+      const files: BodyData = {};
 
-      if (isFile(file)) {
-        await this.handleSingleStorage(c, file);
+      if (isFile(fileOrFiles)) {
+        await this.handleSingleStorage(c, fileOrFiles);
 
-        c.set(FILES_KEY, {
-          ...c.get(FILES_KEY),
-          [name]: file,
-        });
+        files[name] = fileOrFiles;
       }
+
+      c.set(FILES_KEY, {
+        ...c.get(FILES_KEY),
+        ...files,
+      });
 
       await next();
     };
@@ -87,17 +85,23 @@ export class HonoStorage {
   }> => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
-      const files = formData[name];
+      const fileOrFiles = formData[name];
+      const files: BodyData = {};
 
-      if (Array.isArray(files) && files.some(isFile)) {
-        const filteredFiles = files.filter(isFile) as unknown as File[];
-        await this.handleArrayStorage(c, filteredFiles, maxCount);
+      if (Array.isArray(fileOrFiles) && fileOrFiles.some(isFile)) {
+        const filteredFiles = fileOrFiles.filter(isFile) as unknown as File[];
+        if (maxCount && filteredFiles.length > maxCount) {
+          throw new Error("Too many files");
+        }
+        await this.handleArrayStorage(c, filteredFiles);
 
-        c.set(FILES_KEY, {
-          ...c.get(FILES_KEY),
-          [name]: files,
-        });
+        files[name] = fileOrFiles;
       }
+
+      c.set(FILES_KEY, {
+        ...c.get(FILES_KEY),
+        ...files,
+      });
 
       await next();
     };
@@ -111,27 +115,32 @@ export class HonoStorage {
     };
   }> => {
     return async (c, next) => {
+      const formData = await c.req.parseBody({ all: true });
+      const uploader: Promise<void>[] = [];
+      const files: BodyData = {};
+
       for (const { name, maxCount } of schema) {
-        const formData = await c.req.parseBody({ all: true });
         const fileOrFiles = formData[name];
-        let isValidFile = false;
 
         if (Array.isArray(fileOrFiles) && fileOrFiles.some(isFile)) {
           const filteredFiles = fileOrFiles.filter(isFile) as unknown as File[];
-          await this.handleArrayStorage(c, filteredFiles, maxCount);
-          isValidFile = true;
+          if (maxCount && filteredFiles.length > maxCount) {
+            throw new Error("Too many files");
+          }
+          uploader.push(this.handleArrayStorage(c, filteredFiles));
         } else if (isFile(fileOrFiles)) {
-          await this.handleSingleStorage(c, fileOrFiles);
-          isValidFile = true;
+          uploader.push(this.handleSingleStorage(c, fileOrFiles));
         }
 
-        if (isValidFile) {
-          c.set(FILES_KEY, {
-            ...c.get(FILES_KEY),
-            [name]: fileOrFiles,
-          });
-        }
+        files[name] = fileOrFiles;
       }
+
+      await Promise.all(uploader);
+
+      c.set(FILES_KEY, {
+        ...c.get(FILES_KEY),
+        ...files,
+      });
 
       await next();
     };
