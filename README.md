@@ -34,10 +34,10 @@ app.post("/upload/single", storage.single("image"), (c) => c.text("OK"));
 app.post("/upload/array", storage.array("pictures"), (c) => c.text("OK"));
 app.post(
   "/upload/field",
-  storage.fields([
-    { name: "image", maxCount: 1 },
-    { name: "pictures", maxCount: 2 },
-  ]),
+  storage.fields({
+    image: { type: "single" },
+    pictures: { type: "multiple", maxCount: 2 },
+  }),
   (c) => c.text("OK"),
 );
 
