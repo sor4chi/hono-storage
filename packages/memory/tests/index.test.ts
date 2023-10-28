@@ -14,8 +14,8 @@ describe("HonoMemoryStorage", () => {
     app.post(
       "/upload",
       storage.fields({
-        file: { maxCount: 1 },
-        file2: { maxCount: 2 },
+        file: { type: "multiple", maxCount: 1 },
+        file2: { type: "multiple", maxCount: 2 },
       }),
       (c) => c.text("Hello World"),
     );
@@ -55,8 +55,8 @@ describe("HonoMemoryStorage", () => {
     app.post(
       "/upload",
       storage.fields({
-        file: { maxCount: 1 },
-        file2: { maxCount: 2 },
+        file: { type: "multiple", maxCount: 1 },
+        file2: { type: "multiple", maxCount: 2 },
       }),
       (c) => c.text("Hello World"),
     );
