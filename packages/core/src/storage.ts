@@ -46,7 +46,7 @@ export class HonoStorage {
     }
   };
 
-  private handleArrayStorage = async (
+  private handleMultipleStorage = async (
     c: Context,
     files: File[],
   ): Promise<void> => {
@@ -85,7 +85,7 @@ export class HonoStorage {
     };
   };
 
-  array = (
+  multiple = (
     name: string,
     maxCount?: number,
   ): MiddlewareHandler<{
@@ -103,7 +103,7 @@ export class HonoStorage {
         if (maxCount && filteredFiles.length > maxCount) {
           throw new Error("Too many files");
         }
-        await this.handleArrayStorage(c, filteredFiles);
+        await this.handleMultipleStorage(c, filteredFiles);
 
         files[name] = fileOrFiles;
       }
@@ -148,7 +148,7 @@ export class HonoStorage {
           if (field.maxCount && filedFiles.length > field.maxCount) {
             throw new Error("Too many files");
           }
-          uploader.push(this.handleArrayStorage(c, filedFiles));
+          uploader.push(this.handleMultipleStorage(c, filedFiles));
           files[name] = [value].flat();
           continue;
         }

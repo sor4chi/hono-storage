@@ -137,7 +137,9 @@ describe("HonoStorage", () => {
         },
       });
       const app = new Hono();
-      app.post("/upload", storage.array("file"), (c) => c.text("Hello World"));
+      app.post("/upload", storage.multiple("file"), (c) =>
+        c.text("Hello World"),
+      );
 
       const formData = new FormData();
       for (let i = 0; i < 10; i++) {
@@ -168,7 +170,7 @@ describe("HonoStorage", () => {
         },
       });
       const app = new Hono();
-      app.post("/upload", storage.array("file", 3), (c) =>
+      app.post("/upload", storage.multiple("file", 3), (c) =>
         c.text("Hello World"),
       );
       app.onError((err, c) => {
@@ -205,7 +207,7 @@ describe("HonoStorage", () => {
         },
       });
       const app = new Hono();
-      app.post("/upload", storage.array("file", 3), (c) =>
+      app.post("/upload", storage.multiple("file", 3), (c) =>
         c.text("Hello World"),
       );
       app.onError((err, c) => {
@@ -235,7 +237,7 @@ describe("HonoStorage", () => {
     it("can get the multipart/form-data from the context", async () => {
       const storage = new HonoStorage();
       const app = new Hono();
-      app.post("/upload", storage.array("file"), (c) => {
+      app.post("/upload", storage.multiple("file"), (c) => {
         const files = c.var[FILES_KEY];
         return c.text(`${files.file.length} files`);
       });
