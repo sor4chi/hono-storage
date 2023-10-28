@@ -7,10 +7,20 @@ export type HonoStorageOptions = {
   storage?: (c: Context, files: HonoStorageFile[]) => Promise<void> | void;
 };
 
-export type FieldSchema = {
-  name: string;
+interface BaseFieldSchema {
+  type: string;
+}
+
+interface SingleFieldSchema extends BaseFieldSchema {
+  type: "single";
+}
+
+interface MultipleFieldSchema extends BaseFieldSchema {
+  type: "multiple";
   maxCount?: number;
-};
+}
+
+export type FieldSchema = SingleFieldSchema | MultipleFieldSchema;
 
 const isFile = (value: unknown): value is File => {
   if (typeof value !== "object" || value === null) return false;
@@ -108,7 +118,7 @@ export class HonoStorage {
   };
 
   fields = (
-    schema: FieldSchema[],
+    schema: Record<string, FieldSchema>,
   ): MiddlewareHandler<{
     Variables: {
       [FILES_KEY]: BodyData;
@@ -119,20 +129,37 @@ export class HonoStorage {
       const uploader: Promise<void>[] = [];
       const files: BodyData = {};
 
-      for (const { name, maxCount } of schema) {
-        const fileOrFiles = formData[name];
+      for (const name in schema) {
+        const value = formData[name];
+        const field = schema[name];
 
-        if (Array.isArray(fileOrFiles) && fileOrFiles.some(isFile)) {
-          const filteredFiles = fileOrFiles.filter(isFile) as unknown as File[];
-          if (maxCount && filteredFiles.length > maxCount) {
+        if (field.type === "multiple") {
+          const filedFiles: File[] = [];
+          if (Array.isArray(value)) {
+            for (const file of value) {
+              if (isFile(file)) {
+                filedFiles.push(file);
+              }
+            }
+          } else if (isFile(value)) {
+            filedFiles.push(value);
+          }
+
+          if (field.maxCount && filedFiles.length > field.maxCount) {
             throw new Error("Too many files");
           }
-          uploader.push(this.handleArrayStorage(c, filteredFiles));
-        } else if (isFile(fileOrFiles)) {
-          uploader.push(this.handleSingleStorage(c, fileOrFiles));
+          uploader.push(this.handleArrayStorage(c, filedFiles));
+          files[name] = [value].flat();
+          continue;
         }
 
-        files[name] = fileOrFiles;
+        if (field.type === "single") {
+          if (isFile(value)) {
+            uploader.push(this.handleSingleStorage(c, value));
+          }
+          files[name] = value;
+          continue;
+        }
       }
 
       await Promise.all(uploader);
