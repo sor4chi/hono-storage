@@ -269,8 +269,16 @@ describe("HonoStorage", () => {
         },
       });
       const app = new Hono();
-      app.post("/upload", storage.fields([{ name: "file" }]), (c) =>
-        c.text("Hello World"),
+      app.post(
+        "/upload",
+        storage.fields({
+          file: {},
+        }),
+        (c) => {
+          const files = c.var[FILES_KEY];
+          expect(files.file).not.toBeInstanceOf(Array);
+          return c.text("Hello World");
+        },
       );
 
       const formData = new FormData();
@@ -289,7 +297,7 @@ describe("HonoStorage", () => {
       expect(await res.text()).toBe("Hello World");
     });
 
-    it("should work with a single field with maxCount", async () => {
+    it("should work with a single field with maxCount == 1", async () => {
       const storageHandler = vi.fn();
       const storage = new HonoStorage({
         storage: (_, files) => {
@@ -301,8 +309,49 @@ describe("HonoStorage", () => {
       const app = new Hono();
       app.post(
         "/upload",
-        storage.fields([{ name: "file", maxCount: 3 }]),
-        (c) => c.text("Hello World"),
+        storage.fields({
+          file: { maxCount: 1 },
+        }),
+        (c) => {
+          const files = c.var[FILES_KEY];
+          expect(files.file).toBeInstanceOf(Array);
+          return c.text("Hello World");
+        },
+      );
+
+      const formData = new FormData();
+      formData.append("file", new File([`Hello Hono Storage`], "sample1.txt"));
+
+      const res = await app.request("http://localhost/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      expect(res.status).toBe(200);
+      expect(storageHandler).toBeCalledTimes(1);
+      expect(await res.text()).toBe("Hello World");
+    });
+
+    it("should work with a single field with maxCount >= 2", async () => {
+      const storageHandler = vi.fn();
+      const storage = new HonoStorage({
+        storage: (_, files) => {
+          files.forEach(() => {
+            storageHandler();
+          });
+        },
+      });
+      const app = new Hono();
+      app.post(
+        "/upload",
+        storage.fields({
+          file: { maxCount: 3 },
+        }),
+        (c) => {
+          const files = c.var[FILES_KEY];
+          expect(files.file).toBeInstanceOf(Array);
+          return c.text("Hello World");
+        },
       );
 
       const formData = new FormData();
@@ -335,11 +384,11 @@ describe("HonoStorage", () => {
       const app = new Hono();
       app.post(
         "/upload",
-        storage.fields([
-          { name: "file1" },
-          { name: "file2" },
-          { name: "file3" },
-        ]),
+        storage.fields({
+          file1: {},
+          file2: {},
+          file3: {},
+        }),
         (c) => c.text("Hello World"),
       );
 
@@ -373,11 +422,13 @@ describe("HonoStorage", () => {
       const app = new Hono();
       app.post(
         "/upload",
-        storage.fields([
-          { name: "file1" },
-          { name: "file2" },
-          { name: "file3" },
-        ]),
+        storage.fields({
+          file1: {
+            maxCount: 1,
+          },
+          file2: {},
+          file3: {},
+        }),
         (c) => {
           const files = c.var[FILES_KEY];
           return c.text(files.file1 ? "File exists" : "File does not exist");

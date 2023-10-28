@@ -13,10 +13,10 @@ describe("HonoMemoryStorage", () => {
     const app = new Hono();
     app.post(
       "/upload",
-      storage.fields([
-        { name: "file", maxCount: 1 },
-        { name: "file2", maxCount: 2 },
-      ]),
+      storage.fields({
+        file: { maxCount: 1 },
+        file2: { maxCount: 2 },
+      }),
       (c) => c.text("Hello World"),
     );
 
@@ -54,10 +54,10 @@ describe("HonoMemoryStorage", () => {
     const app = new Hono();
     app.post(
       "/upload",
-      storage.fields([
-        { name: "file", maxCount: 1 },
-        { name: "file2", maxCount: 2 },
-      ]),
+      storage.fields({
+        file: { maxCount: 1 },
+        file2: { maxCount: 2 },
+      }),
       (c) => c.text("Hello World"),
     );
 

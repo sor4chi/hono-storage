@@ -8,9 +8,10 @@ export type HonoStorageOptions = {
 };
 
 export type FieldSchema = {
-  name: string;
   maxCount?: number;
 };
+
+export type FieldSchemas = Record<string, FieldSchema>;
 
 const isFile = (value: unknown): value is File => {
   if (typeof value !== "object" || value === null) return false;
@@ -48,11 +49,13 @@ export class HonoStorage {
     }
   };
 
-  single = (
-    name: string,
+  single = <T extends string>(
+    name: T,
   ): MiddlewareHandler<{
     Variables: {
-      [FILES_KEY]: BodyData;
+      [FILES_KEY]: {
+        [K in T]: File | string;
+      };
     };
   }> => {
     return async (c, next) => {
@@ -75,12 +78,14 @@ export class HonoStorage {
     };
   };
 
-  array = (
-    name: string,
+  array = <T extends string>(
+    name: T,
     maxCount?: number,
   ): MiddlewareHandler<{
     Variables: {
-      [FILES_KEY]: BodyData;
+      [FILES_KEY]: {
+        [K in T]: (File | string)[];
+      };
     };
   }> => {
     return async (c, next) => {
@@ -107,11 +112,15 @@ export class HonoStorage {
     };
   };
 
-  fields = (
-    schema: FieldSchema[],
+  fields = <T extends FieldSchemas>(
+    schema: T,
   ): MiddlewareHandler<{
     Variables: {
-      [FILES_KEY]: BodyData;
+      [FILES_KEY]: {
+        [K in keyof T]: T[K] extends { maxCount: number }
+          ? (File | string)[]
+          : File | string;
+      };
     };
   }> => {
     return async (c, next) => {
@@ -119,8 +128,9 @@ export class HonoStorage {
       const uploader: Promise<void>[] = [];
       const files: BodyData = {};
 
-      for (const { name, maxCount } of schema) {
+      for (const name in schema) {
         const fileOrFiles = formData[name];
+        const { maxCount } = schema[name];
 
         if (Array.isArray(fileOrFiles) && fileOrFiles.some(isFile)) {
           const filteredFiles = fileOrFiles.filter(isFile) as unknown as File[];
@@ -132,7 +142,11 @@ export class HonoStorage {
           uploader.push(this.handleSingleStorage(c, fileOrFiles));
         }
 
-        files[name] = fileOrFiles;
+        if (maxCount) {
+          files[name] = [fileOrFiles].flat();
+        } else {
+          files[name] = fileOrFiles;
+        }
       }
 
       await Promise.all(uploader);
