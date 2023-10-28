@@ -31,7 +31,7 @@ const app = new Hono();
 const storage = // your storage, see below
 
 app.post("/upload/single", storage.single("image"), (c) => c.text("OK"));
-app.post("/upload/array", storage.array("pictures"), (c) => c.text("OK"));
+app.post("/upload/multiple", storage.multiple("pictures"), (c) => c.text("OK"));
 app.post(
   "/upload/field",
   storage.fields({
