@@ -7,9 +7,20 @@ export type HonoStorageOptions = {
   storage?: (c: Context, files: HonoStorageFile[]) => Promise<void> | void;
 };
 
-export type FieldSchema = {
+interface BaseFieldSchema {
+  type: string;
+}
+
+interface SingleFieldSchema extends BaseFieldSchema {
+  type: "single";
+}
+
+interface MultipleFieldSchema extends BaseFieldSchema {
+  type: "multiple";
   maxCount?: number;
-};
+}
+
+export type FieldSchema = SingleFieldSchema | MultipleFieldSchema;
 
 export type FieldSchemas = Record<string, FieldSchema>;
 
@@ -117,9 +128,9 @@ export class HonoStorage {
   ): MiddlewareHandler<{
     Variables: {
       [FILES_KEY]: {
-        [K in keyof T]: T[K] extends { maxCount: number }
-          ? (File | string)[]
-          : File | string;
+        [K in keyof T]: T[K] extends { type: "single" }
+          ? File | string
+          : (File | string)[];
       };
     };
   }> => {
@@ -129,23 +140,35 @@ export class HonoStorage {
       const files: BodyData = {};
 
       for (const name in schema) {
-        const fileOrFiles = formData[name];
-        const { maxCount } = schema[name];
+        const value = formData[name];
+        const field = schema[name];
 
-        if (Array.isArray(fileOrFiles) && fileOrFiles.some(isFile)) {
-          const filteredFiles = fileOrFiles.filter(isFile) as unknown as File[];
-          if (maxCount && filteredFiles.length > maxCount) {
+        if (field.type === "multiple") {
+          const filedFiles: File[] = [];
+          if (Array.isArray(value)) {
+            for (const file of value) {
+              if (isFile(file)) {
+                filedFiles.push(file);
+              }
+            }
+          } else if (isFile(value)) {
+            filedFiles.push(value);
+          }
+
+          if (field.maxCount && filedFiles.length > field.maxCount) {
             throw new Error("Too many files");
           }
-          uploader.push(this.handleArrayStorage(c, filteredFiles));
-        } else if (isFile(fileOrFiles)) {
-          uploader.push(this.handleSingleStorage(c, fileOrFiles));
+          uploader.push(this.handleArrayStorage(c, filedFiles));
+          files[name] = [value].flat();
+          continue;
         }
 
-        if (maxCount) {
-          files[name] = [fileOrFiles].flat();
-        } else {
-          files[name] = fileOrFiles;
+        if (field.type === "single") {
+          if (isFile(value)) {
+            uploader.push(this.handleSingleStorage(c, value));
+          }
+          files[name] = value;
+          continue;
         }
       }
 

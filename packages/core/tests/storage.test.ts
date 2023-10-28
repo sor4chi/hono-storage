@@ -272,7 +272,9 @@ describe("HonoStorage", () => {
       app.post(
         "/upload",
         storage.fields({
-          file: {},
+          file: {
+            type: "single",
+          },
         }),
         (c) => {
           const files = c.var[FILES_KEY];
@@ -310,11 +312,14 @@ describe("HonoStorage", () => {
       app.post(
         "/upload",
         storage.fields({
-          file: { maxCount: 1 },
+          file: {
+            type: "multiple",
+            maxCount: 1,
+          },
         }),
         (c) => {
           const files = c.var[FILES_KEY];
-          expect(files.file).toBeInstanceOf(Array);
+          expectTypeOf(files.file).toMatchTypeOf<(File | string)[]>;
           return c.text("Hello World");
         },
       );
@@ -345,7 +350,10 @@ describe("HonoStorage", () => {
       app.post(
         "/upload",
         storage.fields({
-          file: { maxCount: 3 },
+          file: {
+            type: "multiple",
+            maxCount: 3,
+          },
         }),
         (c) => {
           const files = c.var[FILES_KEY];
@@ -385,9 +393,9 @@ describe("HonoStorage", () => {
       app.post(
         "/upload",
         storage.fields({
-          file1: {},
-          file2: {},
-          file3: {},
+          file1: { type: "single" },
+          file2: { type: "single" },
+          file3: { type: "single" },
         }),
         (c) => c.text("Hello World"),
       );
@@ -423,11 +431,9 @@ describe("HonoStorage", () => {
       app.post(
         "/upload",
         storage.fields({
-          file1: {
-            maxCount: 1,
-          },
-          file2: {},
-          file3: {},
+          file1: { type: "multiple", maxCount: 1 },
+          file2: { type: "multiple", maxCount: 1 },
+          file3: { type: "multiple", maxCount: 1 },
         }),
         (c) => {
           const files = c.var[FILES_KEY];
