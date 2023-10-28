@@ -269,7 +269,7 @@ describe("HonoStorage", () => {
         },
       });
       const app = new Hono();
-      app.post("/upload", storage.fields([{ name: "file" }]), (c) =>
+      app.post("/upload", storage.fields({ file: { type: "single" } }), (c) =>
         c.text("Hello World"),
       );
 
@@ -301,7 +301,7 @@ describe("HonoStorage", () => {
       const app = new Hono();
       app.post(
         "/upload",
-        storage.fields([{ name: "file", maxCount: 3 }]),
+        storage.fields({ file: { type: "multiple", maxCount: 3 } }),
         (c) => c.text("Hello World"),
       );
 
@@ -335,11 +335,11 @@ describe("HonoStorage", () => {
       const app = new Hono();
       app.post(
         "/upload",
-        storage.fields([
-          { name: "file1" },
-          { name: "file2" },
-          { name: "file3" },
-        ]),
+        storage.fields({
+          file1: { type: "single" },
+          file2: { type: "single" },
+          file3: { type: "single" },
+        }),
         (c) => c.text("Hello World"),
       );
 
@@ -373,11 +373,11 @@ describe("HonoStorage", () => {
       const app = new Hono();
       app.post(
         "/upload",
-        storage.fields([
-          { name: "file1" },
-          { name: "file2" },
-          { name: "file3" },
-        ]),
+        storage.fields({
+          file1: { type: "single" },
+          file2: { type: "single" },
+          file3: { type: "single" },
+        }),
         (c) => {
           const files = c.var[FILES_KEY];
           return c.text(files.file1 ? "File exists" : "File does not exist");
