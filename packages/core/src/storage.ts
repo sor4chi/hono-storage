@@ -7,15 +7,15 @@ export type HonoStorageOptions = {
   storage?: (c: Context, files: HonoStorageFile[]) => Promise<void> | void;
 };
 
-interface BaseFieldSchema {
+export interface BaseFieldSchema {
   type: string;
 }
 
-interface SingleFieldSchema extends BaseFieldSchema {
+export interface SingleFieldSchema extends BaseFieldSchema {
   type: "single";
 }
 
-interface MultipleFieldSchema extends BaseFieldSchema {
+export interface MultipleFieldSchema extends BaseFieldSchema {
   type: "multiple";
   maxCount?: number;
 }
