@@ -1,5 +1,12 @@
 # @hono-storage/s3-node-example
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @hono-storage/s3@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes

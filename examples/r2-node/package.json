@@ -1,7 +1,7 @@
 {
   "name": "@hono-storage/r2-node-example",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "start": "tsx src/index.ts"
   },

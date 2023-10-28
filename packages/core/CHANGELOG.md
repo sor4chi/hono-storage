@@ -1,5 +1,26 @@
 # @hono-storage/core
 
+## 0.0.5
+
+### Patch Changes
+
+- [#28](https://github.com/sor4chi/hono-storage/pull/28) [`51fa375`](https://github.com/sor4chi/hono-storage/commit/51fa3752a49ddb7403edb57b0f1a1feaf154978b) Thanks [@sor4chi](https://github.com/sor4chi)! - Breaking change: The argument of `storage.field` function is changed.
+
+  ## Before
+
+  ```ts
+  storage.field([{ name: "files", maxCount: 3 }, { name: "image" }]);
+  ```
+
+  ## After
+
+  ```ts
+  storage.field({
+    files: { type: "multiple", maxCount: 3 },
+    image: { type: "single" },
+  });
+  ```
+
 ## 0.0.4
 
 ### Patch Changes
