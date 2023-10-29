@@ -126,7 +126,7 @@ describe("HonoStorage", () => {
     });
   });
 
-  describe("array", () => {
+  describe("multiple", () => {
     it("should work if maxCount is not set", async () => {
       const storageHandler = vi.fn();
       const storage = new HonoStorage({
