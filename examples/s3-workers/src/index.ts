@@ -13,7 +13,8 @@ const client = (accessKeyId: string, secretAccessKey: string) =>
   });
 
 const storage = new HonoS3Storage({
-  key: (_, file) => `${file.originalname}-${new Date().getTime()}`,
+  key: (_, file) =>
+    `${file.originalname}-${new Date().getTime()}.${file.extension}`,
   bucket: "hono-storage",
   client: (c) => client(c.env.AWS_ACCESS_KEY_ID, c.env.AWS_SECRET_ACCESS_KEY),
 });

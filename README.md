@@ -121,7 +121,7 @@ app.post("/upload/vars", storage.single("image"), (c) => {
   });
 
   const storage = new HonoS3Storage({
-    key: (_, file) => `${file.originalname}-${new Date().getTime()}`,
+    key: (_, file) => `${file.originalname}-${new Date().getTime()}.${file.extension}`,
     bucket: "[your-bucket-name]",
     client,
   });
