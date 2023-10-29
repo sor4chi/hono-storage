@@ -74,6 +74,25 @@ describe("HonoStorage", () => {
       expect(actualFieldValue).toBeInstanceOf(Blob);
     });
 
+    it("should through if no form data is provided", async () => {
+      let actualFieldValue: FieldValue | undefined = undefined;
+      app.post("/upload", storage.single("text"), (c) => {
+        actualFieldValue = c.var.files.text;
+        return c.text("OK");
+      });
+
+      const formData = new FormData();
+
+      const res = await app.request("http://localhost/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      expect(res.status).toBe(200);
+      expect(storageHandler).not.toBeCalled();
+      expect(actualFieldValue).toBeUndefined();
+    });
+
     it("should work with single chain", async () => {
       let actualFieldValue1: FieldValue | undefined = undefined;
       let actualFieldValue2: FieldValue | undefined = undefined;
