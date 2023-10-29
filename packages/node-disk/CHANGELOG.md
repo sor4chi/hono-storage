@@ -1,5 +1,12 @@
 # @hono-storage/node-disk
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [[`acf1f0d`](https://github.com/sor4chi/hono-storage/commit/acf1f0de6d1c88224182ead9aff3578c5c8842d4), [`6da696f`](https://github.com/sor4chi/hono-storage/commit/6da696f952a6bfeac95725bd077deebba9da8591)]:
+  - @hono-storage/core@0.0.6
+
 ## 0.0.6
 
 ### Patch Changes

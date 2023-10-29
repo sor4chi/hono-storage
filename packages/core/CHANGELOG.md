@@ -1,5 +1,23 @@
 # @hono-storage/core
 
+## 0.0.6
+
+### Patch Changes
+
+- [#33](https://github.com/sor4chi/hono-storage/pull/33) [`acf1f0d`](https://github.com/sor4chi/hono-storage/commit/acf1f0de6d1c88224182ead9aff3578c5c8842d4) Thanks [@sor4chi](https://github.com/sor4chi)! - `c.var.files` became type-safe
+
+  ```ts
+  app.post("/single", storage.single("image"), (c) => {
+    const image = c.var.files.image; // string | File | undefined
+  });
+
+  app.post("/multiple", storage.multiple("images"), (c) => {
+    const images = c.var.files.images; // (string | File)[]
+  });
+  ```
+
+- [#30](https://github.com/sor4chi/hono-storage/pull/30) [`6da696f`](https://github.com/sor4chi/hono-storage/commit/6da696f952a6bfeac95725bd077deebba9da8591) Thanks [@sor4chi](https://github.com/sor4chi)! - Breaking Change: Rename `storage.array` to `storage.multiple`.
+
 ## 0.0.5
 
 ### Patch Changes
