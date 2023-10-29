@@ -21,7 +21,7 @@ export interface MultipleFieldSchema extends BaseFieldSchema {
 
 export type FieldSchema = SingleFieldSchema | MultipleFieldSchema;
 
-type FieldValue = string | File;
+export type FieldValue = string | File;
 
 const isFile = (value: unknown): value is File => {
   if (typeof value !== "object" || value === null) return false;
@@ -121,7 +121,7 @@ export class HonoStorage {
     Variables: {
       [FILES_KEY]: {
         [key in keyof T]: T[key]["type"] extends "single"
-          ? FieldValue
+          ? FieldValue | undefined
           : FieldValue[];
       };
     };
