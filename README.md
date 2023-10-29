@@ -43,7 +43,7 @@ app.post(
 
 // and you can get parsed formData easily
 app.post("/upload/vars", storage.single("image"), (c) => {
-  const { image } = c.get("files");
+  const { image } = c.var.files;
   // do something with file
   return c.text("OK");
 });
