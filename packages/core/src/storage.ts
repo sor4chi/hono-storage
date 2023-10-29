@@ -61,6 +61,7 @@ export class HonoStorage {
 
   single = <T extends string>(
     name: T,
+    _options?: Omit<SingleFieldSchema, "type">,
   ): MiddlewareHandler<{
     Variables: {
       [FILES_KEY]: {
@@ -86,7 +87,7 @@ export class HonoStorage {
 
   multiple = <T extends string>(
     name: T,
-    maxCount?: number,
+    options?: Omit<MultipleFieldSchema, "type">,
   ): MiddlewareHandler<{
     Variables: {
       [FILES_KEY]: {
@@ -100,7 +101,7 @@ export class HonoStorage {
 
       if (Array.isArray(value) && value.some(isFile)) {
         const filteredFiles = value.filter(isFile);
-        if (maxCount && filteredFiles.length > maxCount) {
+        if (options?.maxCount && filteredFiles.length > options.maxCount) {
           throw new Error("Too many files");
         }
         await this.handleMultipleStorage(c, filteredFiles);

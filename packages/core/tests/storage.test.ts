@@ -152,7 +152,13 @@ describe("HonoStorage", () => {
     it("should work if maxCount is set and the number of files is less than maxCount", async () => {
       const onErr = vi.fn();
 
-      app.post("/upload", storage.multiple("file", 3), (c) => c.text("OK"));
+      app.post(
+        "/upload",
+        storage.multiple("file", {
+          maxCount: 3,
+        }),
+        (c) => c.text("OK"),
+      );
       app.onError((err, c) => {
         onErr(err);
         return c.text(err.message);
@@ -174,7 +180,13 @@ describe("HonoStorage", () => {
     it("should work if maxCount is set and the number of files is greater than maxCount", async () => {
       const onErr = vi.fn();
 
-      app.post("/upload", storage.multiple("file", 3), (c) => c.text("OK"));
+      app.post(
+        "/upload",
+        storage.multiple("file", {
+          maxCount: 3,
+        }),
+        (c) => c.text("OK"),
+      );
       app.onError((err, c) => {
         onErr(err);
         return c.text(err.message);
