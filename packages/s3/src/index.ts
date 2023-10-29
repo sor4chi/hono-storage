@@ -42,12 +42,10 @@ export class HonoS3Storage extends HonoStorage {
     this.params = options.params;
   }
 
-  async upload(c: Context, file: File) {
-    const key = this.key(c, new HonoStorageFile(file));
+  async upload(c: Context, file: HonoStorageFile) {
+    const key = this.key(c, file);
     const bucket =
-      typeof this.bucket === "function"
-        ? this.bucket(c, new HonoStorageFile(file))
-        : this.bucket;
+      typeof this.bucket === "function" ? this.bucket(c, file) : this.bucket;
 
     // for nodejs
     const isBufferExists = typeof Buffer !== "undefined";
@@ -62,7 +60,7 @@ export class HonoS3Storage extends HonoStorage {
     });
 
     if (typeof this.client === "function") {
-      await this.client(c, new HonoStorageFile(file)).send(command);
+      await this.client(c, file).send(command);
     } else {
       await this.client.send(command);
     }
