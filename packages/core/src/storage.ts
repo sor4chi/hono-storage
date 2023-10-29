@@ -1,7 +1,6 @@
 import { HonoStorageFile } from "./file";
 
 import type { MiddlewareHandler, Context } from "hono";
-import type { BodyData } from "hono/utils/body";
 
 export type HonoStorageOptions = {
   storage?: (c: Context, files: HonoStorageFile[]) => Promise<void> | void;
@@ -21,6 +20,8 @@ export interface MultipleFieldSchema extends BaseFieldSchema {
 }
 
 export type FieldSchema = SingleFieldSchema | MultipleFieldSchema;
+
+export type FieldValue = string | File;
 
 const isFile = (value: unknown): value is File => {
   if (typeof value !== "object" || value === null) return false;
@@ -58,76 +59,77 @@ export class HonoStorage {
     }
   };
 
-  single = (
-    name: string,
+  single = <T extends string>(
+    name: T,
   ): MiddlewareHandler<{
     Variables: {
-      [FILES_KEY]: BodyData;
+      [FILES_KEY]: {
+        [key in T]?: FieldValue;
+      };
     };
   }> => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
-      const fileOrFiles = formData[name];
-      const files: BodyData = {};
-
-      if (isFile(fileOrFiles)) {
-        await this.handleSingleStorage(c, fileOrFiles);
-
-        files[name] = fileOrFiles;
+      const value = formData[name];
+      if (isFile(value)) {
+        await this.handleSingleStorage(c, value);
       }
 
       c.set(FILES_KEY, {
         ...c.get(FILES_KEY),
-        ...files,
+        [name]: value,
       });
 
       await next();
     };
   };
 
-  multiple = (
-    name: string,
+  multiple = <T extends string>(
+    name: T,
     maxCount?: number,
   ): MiddlewareHandler<{
     Variables: {
-      [FILES_KEY]: BodyData;
+      [FILES_KEY]: {
+        [key in T]: FieldValue[];
+      };
     };
   }> => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
-      const fileOrFiles = formData[name];
-      const files: BodyData = {};
+      const value = formData[name] ?? [];
 
-      if (Array.isArray(fileOrFiles) && fileOrFiles.some(isFile)) {
-        const filteredFiles = fileOrFiles.filter(isFile) as unknown as File[];
+      if (Array.isArray(value) && value.some(isFile)) {
+        const filteredFiles = value.filter(isFile);
         if (maxCount && filteredFiles.length > maxCount) {
           throw new Error("Too many files");
         }
         await this.handleMultipleStorage(c, filteredFiles);
-
-        files[name] = fileOrFiles;
       }
 
       c.set(FILES_KEY, {
         ...c.get(FILES_KEY),
-        ...files,
+        [name]: value,
       });
 
       await next();
     };
   };
 
-  fields = (
-    schema: Record<string, FieldSchema>,
+  fields = <T extends Record<string, FieldSchema>>(
+    schema: T,
   ): MiddlewareHandler<{
     Variables: {
-      [FILES_KEY]: BodyData;
+      [FILES_KEY]: {
+        [key in keyof T]: T[key]["type"] extends "single"
+          ? FieldValue | undefined
+          : FieldValue[];
+      };
     };
   }> => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
       const uploader: Promise<void>[] = [];
-      const files: BodyData = {};
+      const files: Record<string, FieldValue | FieldValue[]> = {};
 
       for (const name in schema) {
         const value = formData[name];
@@ -136,11 +138,7 @@ export class HonoStorage {
         if (field.type === "multiple") {
           const filedFiles: File[] = [];
           if (Array.isArray(value)) {
-            for (const file of value) {
-              if (isFile(file)) {
-                filedFiles.push(file);
-              }
-            }
+            filedFiles.push(...value.filter(isFile));
           } else if (isFile(value)) {
             filedFiles.push(value);
           }
