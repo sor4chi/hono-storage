@@ -133,78 +133,95 @@ describe("HonoStorage", () => {
   });
 
   describe("multiple", () => {
-    it("should work if maxCount is not set", async () => {
-      app.post("/upload", storage.multiple("file"), (c) => c.text("OK"));
+    describe("should work depending on the number of files", () => {
+      let formData: FormData;
 
-      const formData = new FormData();
-      for (let i = 0; i < 10; i++) {
-        formData.append("file", new File([`File ${i}`], `sample${i}.txt`));
-      }
-
-      await app.request("http://localhost/upload", {
-        method: "POST",
-        body: formData,
+      beforeEach(() => {
+        app.post("/upload", storage.multiple("file"), (c) => c.text("OK"));
+        formData = new FormData();
       });
 
-      expect(storageHandler).toBeCalledTimes(10);
+      it("should work if field items count is 0", async () => {
+        await app.request("http://localhost/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        expect(storageHandler).toBeCalledTimes(0);
+      });
+
+      it("should work if field items count is 1", async () => {
+        formData.append("file", new File([`File 1`], "sample1.txt"));
+
+        await app.request("http://localhost/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        expect(storageHandler).toBeCalledTimes(1);
+      });
+
+      it("should work if field items count is 10", async () => {
+        for (let i = 0; i < 10; i++) {
+          formData.append("file", new File([`File ${i}`], `sample${i}.txt`));
+        }
+
+        await app.request("http://localhost/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        expect(storageHandler).toBeCalledTimes(10);
+      });
     });
 
-    it("should work if maxCount is set and the number of files is less than maxCount", async () => {
+    describe("should work depending on the number of files with maxCount", () => {
       const onErr = vi.fn();
 
-      app.post(
-        "/upload",
-        storage.multiple("file", {
-          maxCount: 3,
-        }),
-        (c) => c.text("OK"),
-      );
-      app.onError((err, c) => {
-        onErr(err);
-        return c.text(err.message);
+      beforeEach(() => {
+        onErr.mockClear();
+        app.post(
+          "/upload",
+          storage.multiple("file", {
+            maxCount: 3,
+          }),
+          (c) => c.text("OK"),
+        );
+        app.onError((err, c) => {
+          onErr(err);
+          return c.text(err.message);
+        });
       });
 
-      const formData = new FormData();
-      for (let i = 0; i < 2; i++) {
-        formData.append("file", new File([`File ${i}`], `sample${i}.txt`));
-      }
-      await app.request("http://localhost/upload", {
-        method: "POST",
-        body: formData,
+      it("should work if maxCount is set and the number of files is less than maxCount", async () => {
+        const formData = new FormData();
+        for (let i = 0; i < 2; i++) {
+          formData.append("file", new File([`File ${i}`], `sample${i}.txt`));
+        }
+        await app.request("http://localhost/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        expect(storageHandler).toBeCalledTimes(2);
+        expect(onErr).toBeCalledTimes(0);
       });
 
-      expect(storageHandler).toBeCalledTimes(2);
-      expect(onErr).toBeCalledTimes(0);
-    });
+      it("should work if maxCount is set and the number of files is greater than maxCount", async () => {
+        const formData = new FormData();
+        for (let i = 0; i < 4; i++) {
+          formData.append("file", new File([`File ${i}`], `sample${i}.txt`));
+        }
 
-    it("should work if maxCount is set and the number of files is greater than maxCount", async () => {
-      const onErr = vi.fn();
+        await app.request("http://localhost/upload", {
+          method: "POST",
+          body: formData,
+        });
 
-      app.post(
-        "/upload",
-        storage.multiple("file", {
-          maxCount: 3,
-        }),
-        (c) => c.text("OK"),
-      );
-      app.onError((err, c) => {
-        onErr(err);
-        return c.text(err.message);
+        expect(storageHandler).toBeCalledTimes(0);
+        expect(onErr).toBeCalledTimes(1);
+        expect(onErr.mock.calls[0][0].message).toBe("Too many files");
       });
-
-      const formData = new FormData();
-      for (let i = 0; i < 10; i++) {
-        formData.append("file", new File([`File ${i}`], `sample${i}.txt`));
-      }
-
-      await app.request("http://localhost/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      expect(storageHandler).toBeCalledTimes(0);
-      expect(onErr).toBeCalledTimes(1);
-      expect(onErr.mock.calls[0][0].message).toBe("Too many files");
     });
 
     it("can get the multipart/form-data from the context", async () => {
