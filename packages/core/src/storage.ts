@@ -97,15 +97,20 @@ export class HonoStorage {
   }> => {
     return async (c, next) => {
       const formData = await c.req.parseBody({ all: true });
-      const value = formData[name] ?? [];
+      const value = formData[name];
+      const filedFiles: File[] = [];
 
-      if (Array.isArray(value) && value.some(isFile)) {
-        const filteredFiles = value.filter(isFile);
-        if (options?.maxCount && filteredFiles.length > options.maxCount) {
-          throw new Error("Too many files");
-        }
-        await this.handleMultipleStorage(c, filteredFiles);
+      if (Array.isArray(value)) {
+        filedFiles.push(...value.filter(isFile));
+      } else if (isFile(value)) {
+        filedFiles.push(value);
       }
+
+      if (options?.maxCount && filedFiles.length > options.maxCount) {
+        throw new Error("Too many files");
+      }
+
+      await this.handleMultipleStorage(c, filedFiles);
 
       c.set(FILES_KEY, {
         ...c.get(FILES_KEY),
