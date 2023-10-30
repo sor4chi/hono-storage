@@ -1,5 +1,21 @@
 # @hono-storage/core
 
+## 0.0.7
+
+### Patch Changes
+
+- [#36](https://github.com/sor4chi/hono-storage/pull/36) [`17d6090`](https://github.com/sor4chi/hono-storage/commit/17d609093ade861c93eaac5418ca0a7debb7bebb) Thanks [@sor4chi](https://github.com/sor4chi)! - Fix: collectly handle storage when one file posted to multiple middleware
+
+- [`0d257d4`](https://github.com/sor4chi/hono-storage/commit/0d257d42f158bc4485e907d601a6541d0f25a923) Thanks [@sor4chi](https://github.com/sor4chi)! - Breaking Changes: change the way to define multiple middleware option for scalability
+
+  ```ts
+  // Before
+  storage.multiple("field", 3); // max 3 files options
+
+  // After
+  storage.multiple("filed", { maxCount: 3 }); // max 3 files options
+  ```
+
 ## 0.0.6
 
 ### Patch Changes
