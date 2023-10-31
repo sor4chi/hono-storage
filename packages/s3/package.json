@@ -26,5 +26,9 @@
     "@aws-sdk/s3-request-presigner": "3.428.0",
     "@hono-storage/core": "workspace:*",
     "hono": "^3.8.1"
+  },
+  "devDependencies": {
+    "@smithy/types": "^2.4.0",
+    "@web-std/file": "^3.0.3"
   }
 }
