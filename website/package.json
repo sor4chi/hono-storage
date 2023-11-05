@@ -8,8 +8,9 @@
     "serve": "vitepress serve docs"
   },
   "devDependencies": {
-    "vue": "3.2.44",
-    "vitepress": "1.0.0-alpha.28"
+    "@cloudflare/workers-types": "^4.20230914.0",
+    "vitepress": "1.0.0-alpha.28",
+    "vue": "3.2.44"
   },
   "pnpm": {
     "peerDependencyRules": {
