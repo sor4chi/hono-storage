@@ -213,6 +213,9 @@ importers:
 
   website:
     devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20230914.0
+        version: 4.20230914.0
       vitepress:
         specifier: 1.0.0-alpha.28
         version: 1.0.0-alpha.28(@algolia/client-search@4.20.0)(search-insights@2.9.0)
