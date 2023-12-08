@@ -36,13 +36,18 @@ type SignOption = {
   sign?: RequestPresigningArguments;
 };
 
-export interface IS3Repository {
+export interface IS3Object {
   put(command: PutObjectCommand): Promise<void>;
+}
+
+export interface IS3Sign {
   getSingedURL(
     command: GetObjectCommand,
     sign: RequestPresigningArguments,
   ): Promise<string>;
 }
+
+export type IS3Repository = IS3Object & IS3Sign;
 
 export type HSSSingleFieldSchema = SingleFieldSchema & SignOption;
 export type HSSMultipleFieldSchema = MultipleFieldSchema & SignOption;

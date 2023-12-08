@@ -11,10 +11,11 @@ import { Context } from "hono";
 import {
   BaseHonoS3Storage,
   HonoS3StorageOptions,
-  IS3Repository,
+  IS3Object,
+  IS3Sign,
 } from "./storage";
 
-class S3Repository implements IS3Repository {
+class S3Repository implements IS3Object, IS3Sign {
   private client: S3Client;
 
   constructor(client: S3Client) {

@@ -9,14 +9,14 @@ import { File } from "@web-std/file";
 import { Hono } from "hono";
 
 import { HonoS3Storage } from "../";
-import { BaseHonoS3Storage, IS3Repository } from "../src/storage";
+import { BaseHonoS3Storage, IS3Object, IS3Sign } from "../src/storage";
 
 describe("HonoS3Storage", () => {
   const putToS3 = vi.fn();
   const getSignedURLFromS3 = vi.fn();
   let app = new Hono();
 
-  class MockS3Repository implements IS3Repository {
+  class MockS3Repository implements IS3Object, IS3Sign {
     async put(command: PutObjectCommand) {
       putToS3(command);
     }
