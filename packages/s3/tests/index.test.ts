@@ -17,11 +17,10 @@ describe("HonoS3Storage", () => {
   let app = new Hono();
 
   class MockS3Repository implements IS3Repository {
-    async put(_client: S3Client, command: PutObjectCommand) {
+    async put(command: PutObjectCommand) {
       putToS3(command);
     }
     async getSingedURL(
-      _client: S3Client,
       command: GetObjectCommand,
       sign: RequestPresigningArguments,
     ) {

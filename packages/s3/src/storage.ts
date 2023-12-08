@@ -37,9 +37,8 @@ type SignOption = {
 };
 
 export interface IS3Repository {
-  put(client: S3Client, command: PutObjectCommand): Promise<void>;
+  put(command: PutObjectCommand): Promise<void>;
   getSingedURL(
-    client: S3Client,
     command: GetObjectCommand,
     sign: RequestPresigningArguments,
   ): Promise<string>;
@@ -54,11 +53,13 @@ export class BaseHonoS3Storage {
   private storage: HonoStorage;
   private key: HSSFunction<string>;
   private bucket: string | HSSFunction<string>;
-  private client: S3Client | HSSFunction<S3Client>;
   private params?: UploadCustomParams;
-  private s3Repository: IS3Repository;
+  private s3Repository: IS3Repository | HSSFunction<IS3Repository>;
 
-  constructor(options: HonoS3StorageOptions, s3Repository: IS3Repository) {
+  constructor(
+    options: HonoS3StorageOptions,
+    s3Repository: IS3Repository | HSSFunction<IS3Repository>,
+  ) {
     this.storage = new HonoStorage({
       storage: async (c, files) => {
         await Promise.all(
@@ -71,7 +72,6 @@ export class BaseHonoS3Storage {
 
     this.key = options.key ?? ((_, file) => file.name);
     this.bucket = options.bucket;
-    this.client = options.client;
     this.params = options.params;
     this.s3Repository = s3Repository;
   }
@@ -106,20 +106,18 @@ export class BaseHonoS3Storage {
       Key: key,
     });
 
-    const client =
-      typeof this.client === "function" ? this.client(c, file) : this.client;
-
     const signConfig = c.get(SIGN_CONFIG_KEY) ?? {};
     const sign = signConfig[file.field.name];
 
-    await this.s3Repository.put(client, putCommand);
+    const s3Repository =
+      typeof this.s3Repository === "function"
+        ? this.s3Repository(c, file)
+        : this.s3Repository;
+
+    await s3Repository.put(putCommand);
 
     if (sign) {
-      const signedURL = await this.s3Repository.getSingedURL(
-        client,
-        getCommand,
-        sign,
-      );
+      const signedURL = await s3Repository.getSingedURL(getCommand, sign);
       const signedURLs = c.get(SIGNED_URL_KEY) ?? {};
       c.set(SIGNED_URL_KEY, {
         ...signedURLs,
