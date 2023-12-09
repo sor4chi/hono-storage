@@ -1,7 +1,7 @@
 import { File } from "@web-std/file";
 import { Hono } from "hono";
 
-import { HonoStorage, FieldValue } from "../src/storage";
+import { HonoStorage, FieldValue, Errors } from "../src";
 
 describe("HonoStorage", () => {
   it("should be able to create a new instance", () => {
@@ -329,7 +329,7 @@ describe("HonoStorage", () => {
 
       expect(storageHandler).toBeCalledTimes(0);
       expect(onErr).toBeCalledTimes(1);
-      expect(onErr.mock.calls[0][0].message).toBe("Too many files");
+      expect(onErr.mock.calls[0][0].message).toBe(Errors.TooManyFiles.message);
     });
 
     it("can get the multipart/form-data from the context", async () => {

@@ -1,3 +1,4 @@
+import { Errors } from "./error";
 import { HonoStorageFile } from "./file";
 
 import type { MiddlewareHandler, Context } from "hono";
@@ -163,7 +164,7 @@ export class HonoStorage {
           }
 
           if (field.maxCount && filedFiles.length > field.maxCount) {
-            throw new Error("Too many files");
+            throw Errors.TooManyFiles;
           }
           uploader.push(this.handleMultipleStorage(c, filedFiles, name));
           files[name] = [value].flat();
