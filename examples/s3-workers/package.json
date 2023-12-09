@@ -1,7 +1,7 @@
 {
   "name": "@hono-storage/s3-workers-example",
   "private": true,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts"

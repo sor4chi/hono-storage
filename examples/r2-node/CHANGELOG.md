@@ -1,5 +1,12 @@
 # @hono-storage/r2-node-example
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [[`ad5332b`](https://github.com/sor4chi/hono-storage/commit/ad5332b6689ad1baeba70406d732d81623779e97)]:
+  - @hono-storage/s3@0.0.7
+
 ## 0.0.5
 
 ### Patch Changes

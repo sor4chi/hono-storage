@@ -1,5 +1,47 @@
 # @hono-storage/s3
 
+## 0.0.7
+
+### Patch Changes
+
+- [#38](https://github.com/sor4chi/hono-storage/pull/38) [`ad5332b`](https://github.com/sor4chi/hono-storage/commit/ad5332b6689ad1baeba70406d732d81623779e97) Thanks [@sor4chi](https://github.com/sor4chi)! - feat: support `signedUrl` for s3 storage.
+
+  ```ts
+  import { S3Client } from "@aws-sdk/client-s3";
+  import { HonoS3Storage } from "@hono-storage/s3";
+  import { Hono } from "hono";
+
+  const client = new S3Client({
+    region: "us-east-1",
+    credentials: {
+      accessKeyId: "...",
+      secretAccessKey: "...",
+    },
+  });
+
+  const storage = new HonoS3Storage({
+    bucket: "hono-storage",
+    client,
+  });
+
+  const app = new Hono();
+
+  app.post(
+    "/",
+    storage.single("image", {
+      sign: {
+        expiresIn: 60,
+      },
+    }),
+    (c) => {
+      return c.json({ signedURL: c.var.signedURLs.image });
+    },
+  );
+  ```
+
+- Updated dependencies [[`0fffc7f`](https://github.com/sor4chi/hono-storage/commit/0fffc7f76152df882b15398014ca8aa331a6ff12)]:
+  - @hono-storage/core@0.0.8
+
 ## 0.0.6
 
 ### Patch Changes
