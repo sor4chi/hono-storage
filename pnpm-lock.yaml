@@ -133,6 +133,28 @@ importers:
         specifier: ^3.12.2
         version: 3.13.0
 
+  examples/s3-sign:
+    dependencies:
+      '@aws-sdk/client-s3':
+        specifier: ^3.428.0
+        version: 3.428.0
+      '@hono-storage/s3':
+        specifier: workspace:*
+        version: link:../../packages/s3
+      '@hono/node-server':
+        specifier: ^1.1.0
+        version: 1.2.0
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
+      hono:
+        specifier: ^3.8.1
+        version: 3.8.1
+    devDependencies:
+      tsx:
+        specifier: ^3.12.2
+        version: 3.13.0
+
   examples/s3-workers:
     dependencies:
       '@aws-sdk/client-s3':
@@ -489,7 +511,7 @@ packages:
       '@smithy/credential-provider-imds': 2.0.16
       '@smithy/property-provider': 2.0.12
       '@smithy/shared-ini-file-loader': 2.2.0
-      '@smithy/types': 2.3.5
+      '@smithy/types': 2.4.0
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
@@ -800,7 +822,7 @@ packages:
     dependencies:
       '@aws-sdk/types': 3.428.0
       '@smithy/node-config-provider': 2.1.1
-      '@smithy/types': 2.3.5
+      '@smithy/types': 2.4.0
       tslib: 2.6.2
     dev: false
 
