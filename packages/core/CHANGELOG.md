@@ -1,5 +1,11 @@
 # @hono-storage/core
 
+## 0.0.8
+
+### Patch Changes
+
+- [#38](https://github.com/sor4chi/hono-storage/pull/38) [`0fffc7f`](https://github.com/sor4chi/hono-storage/commit/0fffc7f76152df882b15398014ca8aa331a6ff12) Thanks [@sor4chi](https://github.com/sor4chi)! - feat: add `field` property to `HonoStorageFile`(HSF).
+
 ## 0.0.7
 
 ### Patch Changes
