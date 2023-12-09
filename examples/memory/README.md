@@ -1,8 +1,6 @@
-```
-npm install
-npm run start
-```
+# Hono Storage for In-Memory
 
-```
-open http://localhost:3000
+```bash
+pnpm i
+pnpm start
 ```
