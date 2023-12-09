@@ -1,70 +1,51 @@
 import {
-  S3Client,
+  GetObjectCommand,
   PutObjectCommand,
-  PutObjectRequest,
+  S3Client,
 } from "@aws-sdk/client-s3";
-import { HonoStorage, HonoStorageFile } from "@hono-storage/core";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { HonoStorageFile } from "@hono-storage/core";
+import { RequestPresigningArguments } from "@smithy/types";
 import { Context } from "hono";
 
-type HSSFunction<T> = (c: Context, file: HonoStorageFile) => T;
-type UploadCustomParams = Omit<
-  PutObjectRequest,
-  "Bucket" | "Key" | "Body" | "ContentType" | "ContentLength"
->;
+import {
+  BaseHonoS3Storage,
+  HonoS3StorageOptions,
+  IS3Object,
+  IS3Sign,
+} from "./storage";
 
-export type HonoS3StorageOptions = {
-  key?: HSSFunction<string>;
-  bucket: string | HSSFunction<string>;
-  client: S3Client | HSSFunction<S3Client>;
-  params?: UploadCustomParams;
-};
+class S3Repository implements IS3Object, IS3Sign {
+  private client: S3Client;
 
-export class HonoS3Storage extends HonoStorage {
-  key: HSSFunction<string>;
-  bucket: string | HSSFunction<string>;
-  client: S3Client | HSSFunction<S3Client>;
-  params?: UploadCustomParams;
-
-  constructor(options: HonoS3StorageOptions) {
-    super({
-      storage: async (c, files) => {
-        await Promise.all(
-          files.map(async (file) => {
-            await this.upload(c, file);
-          }),
-        );
-      },
-    });
-
-    this.key = options.key ?? ((_, file) => file.name);
-    this.bucket = options.bucket;
-    this.client = options.client;
-    this.params = options.params;
+  constructor(client: S3Client) {
+    this.client = client;
   }
 
-  async upload(c: Context, file: File) {
-    const key = this.key(c, new HonoStorageFile(file));
-    const bucket =
-      typeof this.bucket === "function"
-        ? this.bucket(c, new HonoStorageFile(file))
-        : this.bucket;
+  async put(command: PutObjectCommand): Promise<void> {
+    await this.client.send(command);
+  }
 
-    // for nodejs
-    const isBufferExists = typeof Buffer !== "undefined";
+  async getSingedURL(
+    command: GetObjectCommand,
+    sign: RequestPresigningArguments,
+  ): Promise<string> {
+    return await getSignedUrl(this.client, command, sign);
+  }
+}
 
-    const command = new PutObjectCommand({
-      Bucket: bucket,
-      Key: key,
-      Body: isBufferExists ? Buffer.from(await file.arrayBuffer()) : file,
-      ContentType: file.type,
-      ContentLength: file.size,
-      ...this.params,
-    });
+export class HonoS3Storage extends BaseHonoS3Storage {
+  constructor(options: HonoS3StorageOptions) {
+    const client = options.client;
 
-    if (typeof this.client === "function") {
-      await this.client(c, new HonoStorageFile(file)).send(command);
-    } else {
-      await this.client.send(command);
+    if (typeof client !== "function") {
+      super(options, new S3Repository(client));
+      return;
     }
+
+    super(
+      options,
+      (c: Context, file: HonoStorageFile) => new S3Repository(client(c, file)),
+    );
   }
 }

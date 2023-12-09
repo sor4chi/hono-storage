@@ -41,20 +41,33 @@ export class HonoStorage {
   private handleSingleStorage = async (
     c: Context,
     file: File,
+    fieldName: string,
   ): Promise<void> => {
     if (this.options.storage) {
-      await this.options.storage(c, [new HonoStorageFile(file)]);
+      await this.options.storage(c, [
+        new HonoStorageFile(file, {
+          name: fieldName,
+          type: "single",
+        }),
+      ]);
     }
   };
 
   private handleMultipleStorage = async (
     c: Context,
     files: File[],
+    fieldName: string,
   ): Promise<void> => {
     if (this.options.storage) {
       await this.options.storage(
         c,
-        files.map((file) => new HonoStorageFile(file)),
+        files.map(
+          (file) =>
+            new HonoStorageFile(file, {
+              name: fieldName,
+              type: "multiple",
+            }),
+        ),
       );
     }
   };
@@ -73,7 +86,7 @@ export class HonoStorage {
       const formData = await c.req.parseBody({ all: true });
       const value = formData[name];
       if (isFile(value)) {
-        await this.handleSingleStorage(c, value);
+        await this.handleSingleStorage(c, value, name);
       }
 
       c.set(FILES_KEY, {
@@ -110,7 +123,7 @@ export class HonoStorage {
         throw new Error("Too many files");
       }
 
-      await this.handleMultipleStorage(c, filedFiles);
+      await this.handleMultipleStorage(c, filedFiles, name);
 
       c.set(FILES_KEY, {
         ...c.get(FILES_KEY),
@@ -152,14 +165,14 @@ export class HonoStorage {
           if (field.maxCount && filedFiles.length > field.maxCount) {
             throw new Error("Too many files");
           }
-          uploader.push(this.handleMultipleStorage(c, filedFiles));
+          uploader.push(this.handleMultipleStorage(c, filedFiles, name));
           files[name] = [value].flat();
           continue;
         }
 
         if (field.type === "single") {
           if (isFile(value)) {
-            uploader.push(this.handleSingleStorage(c, value));
+            uploader.push(this.handleSingleStorage(c, value, name));
           }
           files[name] = value;
           continue;
