@@ -1,5 +1,14 @@
 # @hono-storage/s3
 
+## 0.0.8
+
+### Patch Changes
+
+- [`628e0dc`](https://github.com/sor4chi/hono-storage/commit/628e0dcd6b48953db1d212e317c1d470499780e3) Thanks [@sor4chi](https://github.com/sor4chi)! - fix package.json
+
+- Updated dependencies [[`628e0dc`](https://github.com/sor4chi/hono-storage/commit/628e0dcd6b48953db1d212e317c1d470499780e3)]:
+  - @hono-storage/core@0.0.9
+
 ## 0.0.7
 
 ### Patch Changes
