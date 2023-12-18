@@ -2,8 +2,7 @@
   "name": "@hono-storage/core",
   "version": "0.0.8",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "lint": "eslint --fix --ext .ts,.tsx src",
@@ -16,6 +15,15 @@
   "keywords": [
     "hono"
   ],
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "author": "sor4chi",
   "license": "MIT",
   "dependencies": {
