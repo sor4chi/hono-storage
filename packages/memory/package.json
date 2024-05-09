@@ -27,10 +27,13 @@
   "author": "sor4chi",
   "license": "MIT",
   "dependencies": {
-    "@hono-storage/core": "workspace:*",
-    "hono": "^4.3.2"
+    "@hono-storage/core": "workspace:*"
   },
   "devDependencies": {
-    "vitest": "^0.34.5"
+    "vitest": "^0.34.5",
+    "hono": "^4.3.2"
+  },
+  "peerDependencies": {
+    "hono": ">=3.8"
   }
 }
