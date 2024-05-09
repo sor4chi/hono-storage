@@ -28,7 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@hono-storage/core": "workspace:*",
-    "hono": "^3.8.1"
+    "hono": "^4.3.2"
   },
   "devDependencies": {
     "vitest": "^0.34.5"
