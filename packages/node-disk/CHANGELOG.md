@@ -1,5 +1,14 @@
 # @hono-storage/node-disk
 
+## 0.0.11
+
+### Patch Changes
+
+- [#47](https://github.com/sor4chi/hono-storage/pull/47) [`0cc024e`](https://github.com/sor4chi/hono-storage/commit/0cc024eb7dc065bb648f34c52174b0b1baa8d044) Thanks [@sor4chi](https://github.com/sor4chi)! - update Hono's version to v4.3.2
+
+- Updated dependencies [[`0cc024e`](https://github.com/sor4chi/hono-storage/commit/0cc024eb7dc065bb648f34c52174b0b1baa8d044)]:
+  - @hono-storage/core@0.0.10
+
 ## 0.0.10
 
 ### Patch Changes
