@@ -31,13 +31,16 @@
   "license": "MIT",
   "dependencies": {
     "@hono-storage/core": "workspace:*",
-    "@web-std/file": "^3.0.3",
-    "hono": "^4.3.2"
+    "@web-std/file": "^3.0.3"
   },
   "devDependencies": {
     "@hono/node-server": "^1.2.0",
     "@types/node": "^18.7.6",
     "@types/supertest": "^2.0.12",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "hono": "^4.3.2"
+  },
+  "peerDependencies": {
+    "hono": ">=4"
   }
 }
