@@ -66,8 +66,8 @@ importers:
         specifier: ^1.1.0
         version: 1.2.0
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       tsx:
         specifier: ^3.12.2
@@ -82,8 +82,8 @@ importers:
         specifier: ^1.1.0
         version: 1.2.0
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       tsx:
         specifier: ^3.12.2
@@ -104,8 +104,8 @@ importers:
         specifier: ^16.3.1
         version: 16.3.1
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       tsx:
         specifier: ^3.12.2
@@ -126,8 +126,8 @@ importers:
         specifier: ^16.3.1
         version: 16.3.1
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       tsx:
         specifier: ^3.12.2
@@ -148,8 +148,8 @@ importers:
         specifier: ^16.3.1
         version: 16.3.1
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       tsx:
         specifier: ^3.12.2
@@ -164,8 +164,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/s3
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20230914.0
@@ -180,8 +180,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
 
   packages/memory:
     dependencies:
@@ -189,8 +189,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       vitest:
         specifier: ^0.34.5
@@ -205,8 +205,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       '@hono/node-server':
         specifier: ^1.2.0
@@ -233,8 +233,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       hono:
-        specifier: ^3.8.1
-        version: 3.8.1
+        specifier: ^4.3.2
+        version: 4.3.2
     devDependencies:
       '@smithy/types':
         specifier: ^2.4.0
@@ -4362,8 +4362,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /hono@3.8.1:
-    resolution: {integrity: sha512-im5K3bEyb6iMQP5Tfei5vfoHLnIKrsAqT/GNJJ4lxS75MvNaecUbPX0Xgi0ibTIos31lA5oYevMDGNNXhHJ9wA==}
+  /hono@4.3.2:
+    resolution: {integrity: sha512-wiZcF5N06tc232U11DnqW6hP8DNoypjsrxslKXfvOqOAkTdh7K1HLZJH/92Mf+urxUTGi96f1w4xx/1Qozoqiw==}
     engines: {node: '>=16.0.0'}
     dev: false
 
