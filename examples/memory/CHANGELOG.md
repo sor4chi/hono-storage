@@ -1,5 +1,12 @@
 # @hono-storage/memory-example
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [[`628e0dc`](https://github.com/sor4chi/hono-storage/commit/628e0dcd6b48953db1d212e317c1d470499780e3)]:
+  - @hono-storage/memory@0.0.8
+
 ## 0.0.7
 
 ### Patch Changes
