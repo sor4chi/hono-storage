@@ -1,5 +1,6 @@
 import { HonoStorage, HonoStorageFile } from "@hono-storage/core";
-import { Context } from "hono";
+
+import type { Context } from "hono";
 
 type HMSFunction = (c: Context, file: HonoStorageFile) => string;
 

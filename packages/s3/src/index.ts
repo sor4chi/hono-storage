@@ -6,7 +6,6 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { HonoStorageFile } from "@hono-storage/core";
 import { RequestPresigningArguments } from "@smithy/types";
-import { Context } from "hono";
 
 import {
   BaseHonoS3Storage,
@@ -14,6 +13,8 @@ import {
   IS3Object,
   IS3Sign,
 } from "./storage";
+
+import type { Context } from "hono";
 
 class S3Repository implements IS3Object, IS3Sign {
   private client: S3Client;

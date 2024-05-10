@@ -4,7 +4,8 @@ import { join } from "path";
 
 import { HonoStorage, HonoStorageFile } from "@hono-storage/core";
 import { File } from "@web-std/file";
-import { Context } from "hono";
+
+import type { Context } from "hono";
 
 type HDSCustomFunction = (c: Context, file: HonoStorageFile) => string;
 
