@@ -1,5 +1,14 @@
 # @hono-storage/s3
 
+## 0.0.11
+
+### Patch Changes
+
+- [#52](https://github.com/sor4chi/hono-storage/pull/52) [`41803f8`](https://github.com/sor4chi/hono-storage/commit/41803f8dbb3ec30ff03720e510e01563b7153b5b) Thanks [@sor4chi](https://github.com/sor4chi)! - Add require exports field for cjs usecase
+
+- Updated dependencies [[`41803f8`](https://github.com/sor4chi/hono-storage/commit/41803f8dbb3ec30ff03720e510e01563b7153b5b)]:
+  - @hono-storage/core@0.0.12
+
 ## 0.0.10
 
 ### Patch Changes

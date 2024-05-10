@@ -1,5 +1,12 @@
 # @hono-storage/s3-sign-example
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`41803f8`](https://github.com/sor4chi/hono-storage/commit/41803f8dbb3ec30ff03720e510e01563b7153b5b)]:
+  - @hono-storage/s3@0.0.11
+
 ## 0.0.4
 
 ### Patch Changes
