@@ -1,5 +1,12 @@
 # @hono-storage/s3-workers-example
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [[`301f6e9`](https://github.com/sor4chi/hono-storage/commit/301f6e9b2e6762b350fc0b3c1316e109fc843917)]:
+  - @hono-storage/s3@0.0.10
+
 ## 0.0.9
 
 ### Patch Changes
