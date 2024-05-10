@@ -1,5 +1,14 @@
 # @hono-storage/memory
 
+## 0.0.10
+
+### Patch Changes
+
+- [#51](https://github.com/sor4chi/hono-storage/pull/51) [`301f6e9`](https://github.com/sor4chi/hono-storage/commit/301f6e9b2e6762b350fc0b3c1316e109fc843917) Thanks [@sor4chi](https://github.com/sor4chi)! - Move Hono to peerDependencies. Hono Storage now has compatibility with Hono v3.8 or later.
+
+- Updated dependencies [[`301f6e9`](https://github.com/sor4chi/hono-storage/commit/301f6e9b2e6762b350fc0b3c1316e109fc843917)]:
+  - @hono-storage/core@0.0.11
+
 ## 0.0.9
 
 ### Patch Changes
