@@ -7,7 +7,10 @@ import { File } from "@web-std/file";
 
 import type { Context } from "hono";
 
-type HDSCustomFunction = (c: Context, file: HonoStorageFile) => string;
+type HDSCustomFunction = (
+  c: Context,
+  file: HonoStorageFile,
+) => Promise<string> | string;
 
 interface HonoDiskStorageOption {
   dest?: string | HDSCustomFunction;
@@ -15,8 +18,6 @@ interface HonoDiskStorageOption {
 }
 
 export class HonoDiskStorage extends HonoStorage {
-  private dest: string | ((c: Context, file: HonoStorageFile) => string);
-
   constructor(option: HonoDiskStorageOption = {}) {
     const { dest = "/tmp" } = option;
 
@@ -24,23 +25,24 @@ export class HonoDiskStorage extends HonoStorage {
       storage: async (c, files) => {
         await Promise.all(
           files.map(async (file) => {
-            const dest =
-              typeof this.dest === "function" ? this.dest(c, file) : this.dest;
-            await mkdir(dest, { recursive: true });
+            const finalDest =
+              typeof dest === "function" ? await dest(c, file) : dest;
+            await mkdir(finalDest, { recursive: true });
             if (option.filename) {
               await this.handleDestStorage(
-                dest,
-                new File([file], option.filename(c, file)),
+                finalDest,
+                new File([file], await option.filename(c, file)),
               );
             } else {
-              await this.handleDestStorage(dest, new File([file], file.name));
+              await this.handleDestStorage(
+                finalDest,
+                new File([file], file.name),
+              );
             }
           }),
         );
       },
     });
-
-    this.dest = dest;
   }
 
   handleDestStorage = async (dest: string, file: File) => {
