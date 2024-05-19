@@ -1,5 +1,11 @@
 # @hono-storage/node-disk
 
+## 0.0.14
+
+### Patch Changes
+
+- [#55](https://github.com/sor4chi/hono-storage/pull/55) [`e5ed56e`](https://github.com/sor4chi/hono-storage/commit/e5ed56e787c81986102fd59d1d5ad951fe0ac64b) Thanks [@sor4chi](https://github.com/sor4chi)! - enable use of dest option as async function
+
 ## 0.0.13
 
 ### Patch Changes
