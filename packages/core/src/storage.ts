@@ -25,9 +25,7 @@ export type FieldSchema = SingleFieldSchema | MultipleFieldSchema;
 export type FieldValue = string | File;
 
 const isFile = (value: unknown): value is File => {
-  if (typeof value !== "object" || value === null) return false;
-  // HELP ME: instanceof File is not working because node <= 20 doesn't have File :(
-  return value instanceof Blob && value.constructor.name === "File";
+  return value instanceof File;
 };
 
 export const FILES_KEY = "files";

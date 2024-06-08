@@ -9,7 +9,7 @@ export type HonoMemoryStorageOptions = {
 };
 
 export class HonoMemoryStorage extends HonoStorage {
-  buffer: Map<string, Blob>;
+  buffer: Map<string, File>;
   key: HMSFunction;
 
   constructor(options: HonoMemoryStorageOptions = {}) {

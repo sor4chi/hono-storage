@@ -77,7 +77,7 @@ describe("HonoS3Storage", () => {
       });
 
       expect(putToS3).toHaveBeenCalledTimes(1);
-      expect(actualFile).toBeInstanceOf(Blob);
+      expect(actualFile).toBeInstanceOf(File);
       expect(actualSignedURL).toBe(undefined);
     });
 
@@ -121,7 +121,7 @@ describe("HonoS3Storage", () => {
       expect(getSignedURLFromS3.mock.calls[0][1]).toMatchObject({
         expiresIn: 60,
       });
-      expect(actualFile).toBeInstanceOf(Blob);
+      expect(actualFile).toBeInstanceOf(File);
       expect(actualSignedURL).toBe("https://example.com");
     });
   });
@@ -163,7 +163,7 @@ describe("HonoS3Storage", () => {
       expect(actualFiles).toHaveLength(2);
       assert(
         Array.isArray(actualFiles) &&
-          actualFiles.every((v) => v instanceof Blob),
+          actualFiles.every((v) => v instanceof File),
       );
       expect(actualSignedURL).toBe(undefined);
     });
@@ -214,7 +214,7 @@ describe("HonoS3Storage", () => {
       expect(actualFiles).toHaveLength(2);
       assert(
         Array.isArray(actualFiles) &&
-          actualFiles.every((v) => v instanceof Blob),
+          actualFiles.every((v) => v instanceof File),
       );
       expect(actualSignedURL).toBeInstanceOf(Array);
       expect(actualSignedURL).toHaveLength(2);
@@ -274,12 +274,12 @@ describe("HonoS3Storage", () => {
 
       expect(putToS3).toHaveBeenCalledTimes(3);
       expect(getSignedURLFromS3).toHaveBeenCalledTimes(0);
-      expect(actualImage).toBeInstanceOf(Blob);
+      expect(actualImage).toBeInstanceOf(File);
       expect(actualImages).toBeInstanceOf(Array);
       expect(actualImages).toHaveLength(2);
       assert(
         Array.isArray(actualImages) &&
-          actualImages.every((v) => v instanceof Blob),
+          actualImages.every((v) => v instanceof File),
       );
       expect(actualSignedURL).toBeInstanceOf(Object);
     });
@@ -342,12 +342,12 @@ describe("HonoS3Storage", () => {
       expect(getSignedURLFromS3.mock.calls[1][1]).toMatchObject({
         expiresIn: 60,
       });
-      expect(actualImage).toBeInstanceOf(Blob);
+      expect(actualImage).toBeInstanceOf(File);
       expect(actualImages).toBeInstanceOf(Array);
       expect(actualImages).toHaveLength(2);
       assert(
         Array.isArray(actualImages) &&
-          actualImages.every((v) => v instanceof Blob),
+          actualImages.every((v) => v instanceof File),
       );
       expect(actualSignedURL).toBeInstanceOf(Object);
       expect(actualSignedURL).toMatchObject({
