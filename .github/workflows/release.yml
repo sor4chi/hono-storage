@@ -20,12 +20,12 @@ jobs:
         with:
           node-version: 18.x
           always-auth: true
-          scope: '@hono-storage'
+          scope: "@hono-storage"
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         with:
-          version: 8
+          version: 9
           run_install: false
 
       - name: Get pnpm store directory
