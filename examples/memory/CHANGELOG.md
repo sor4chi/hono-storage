@@ -1,5 +1,12 @@
 # @hono-storage/memory-example
 
+## 0.0.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @hono-storage/memory@0.0.12
+
 ## 0.0.11
 
 ### Patch Changes
