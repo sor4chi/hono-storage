@@ -1,5 +1,3 @@
-import { File } from "@web-std/file";
-
 type Field = {
   name: string;
   type: "single" | "multiple";
@@ -8,7 +6,7 @@ type Field = {
 export class HonoStorageFile extends File {
   field: Field;
 
-  constructor(file: Blob | File, field: Field) {
+  constructor(file: File, field: Field) {
     super([file], file.name);
     this.field = field;
   }

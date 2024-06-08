@@ -1,5 +1,3 @@
-import { File } from "@web-std/file";
-
 import { HonoStorageFile } from "../src/file";
 
 describe("HonoStorageFile", () => {
