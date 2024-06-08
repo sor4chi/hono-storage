@@ -22,12 +22,18 @@ describe("HonoMemoryStorage", () => {
 
     const formData = new FormData();
 
-    const file1 = new Blob(["Hello World 1"], { type: "text/plain" });
-    const file2 = new Blob(["Hello World 2"], { type: "text/plain" });
-    const file3 = new Blob(["Hello World 3"], { type: "text/plain" });
-    formData.append("file", file1, "sample1.txt");
-    formData.append("file2", file2, "sample2.txt");
-    formData.append("file2", file3, "sample1.txt");
+    const file1 = new File(["Hello World 1"], "sample1.txt", {
+      type: "text/plain",
+    });
+    const file2 = new File(["Hello World 2"], "sample2.txt", {
+      type: "text/plain",
+    });
+    const file3 = new File(["Hello World 3"], "sample1.txt", {
+      type: "text/plain",
+    });
+    formData.append("file", file1);
+    formData.append("file2", file2);
+    formData.append("file2", file3);
 
     const res = await app.request("http://localhost/upload", {
       method: "POST",
@@ -63,12 +69,18 @@ describe("HonoMemoryStorage", () => {
 
     const formData = new FormData();
 
-    const file1 = new Blob(["Hello World 1"], { type: "text/plain" });
-    const file2 = new Blob(["Hello World 2"], { type: "text/plain" });
-    const file3 = new Blob(["Hello World 3"], { type: "text/plain" });
-    formData.append("file", file1, "sample1.txt");
-    formData.append("file2", file2, "sample2.txt");
-    formData.append("file2", file3, "sample1.txt");
+    const file1 = new File(["Hello World 1"], "sample1.txt", {
+      type: "text/plain",
+    });
+    const file2 = new File(["Hello World 2"], "sample2.txt", {
+      type: "text/plain",
+    });
+    const file3 = new File(["Hello World 3"], "sample1.txt", {
+      type: "text/plain",
+    });
+    formData.append("file", file1);
+    formData.append("file2", file2);
+    formData.append("file2", file3);
 
     const res = await app.request("http://localhost/upload?store=1", {
       method: "POST",

@@ -1,4 +1,3 @@
-import { File } from "@web-std/file";
 import { Hono } from "hono";
 
 import { HonoStorage, FieldValue, Errors } from "../src";
@@ -71,7 +70,7 @@ describe("HonoStorage", () => {
 
       expect(res.status).toBe(200);
       expect(storageHandler).toBeCalledTimes(1);
-      expect(actualFieldValue).toBeInstanceOf(Blob);
+      expect(actualFieldValue).toBeInstanceOf(File);
     });
 
     it("should through if no form data is provided", async () => {
@@ -127,7 +126,7 @@ describe("HonoStorage", () => {
 
       expect(res.status).toBe(200);
       expect(storageHandler).toBeCalledTimes(1); // 2 file, but 1 is string
-      expect(actualFieldValue1).toBeInstanceOf(Blob);
+      expect(actualFieldValue1).toBeInstanceOf(File);
       expect(actualFieldValue2).toBe(file2);
     });
   });
@@ -265,7 +264,7 @@ describe("HonoStorage", () => {
       });
 
       expect(storageHandler).toBeCalledTimes(1);
-      expect(actualFieldValue).toBeInstanceOf(Blob);
+      expect(actualFieldValue).toBeInstanceOf(File);
     });
 
     it("should work with a multiple field", async () => {
@@ -363,10 +362,10 @@ describe("HonoStorage", () => {
       });
 
       expect(storageHandler).toBeCalledTimes(3);
-      expect(actualFieldValue1).toBeInstanceOf(Blob);
+      expect(actualFieldValue1).toBeInstanceOf(File);
       expect(actualFieldValue2).toHaveLength(2);
       expect((actualFieldValue2 as unknown as FieldValue[])[0]).toBeInstanceOf(
-        Blob,
+        File,
       );
     });
   });
