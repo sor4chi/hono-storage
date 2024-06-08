@@ -26,9 +26,6 @@
       "require": "./dist/index.cjs"
     }
   },
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "author": "sor4chi",
   "license": "MIT",
   "dependencies": {
