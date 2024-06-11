@@ -1,5 +1,16 @@
 # @hono-storage/core
 
+## 0.0.13
+
+### Patch Changes
+
+- [#65](https://github.com/sor4chi/hono-storage/pull/65) [`474a669`](https://github.com/sor4chi/hono-storage/commit/474a669a8f43156aafa58173390504d355ff1b7f) Thanks [@sor4chi](https://github.com/sor4chi)! - fix: remove `File` (`@web-std/file`) polyfill from `@hono-storage/core` package
+
+  This changes means that **stop Node.js v18 support** for `@hono-storage/core` package.
+
+  `@web-std/file` is a polyfill for the `File` class, but for web compatibility, it's not necessary to adapt the `File` class to Node.js.
+  So if you want to Hono Storage to work on older Node.js versions, you can use the `@web-std/file` package manually.
+
 ## 0.0.12
 
 ### Patch Changes

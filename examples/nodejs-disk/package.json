@@ -1,7 +1,7 @@
 {
   "name": "@hono-storage/node-disk-example",
   "private": true,
-  "version": "0.0.14",
+  "version": "0.0.15",
   "scripts": {
     "start": "tsx src/index.ts"
   },

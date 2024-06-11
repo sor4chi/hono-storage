@@ -1,5 +1,12 @@
 # @hono-storage/s3-sign-example
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @hono-storage/s3@0.0.12
+
 ## 0.0.5
 
 ### Patch Changes
