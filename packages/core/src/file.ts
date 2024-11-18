@@ -9,7 +9,6 @@ export class HonoStorageFile extends File {
   constructor(file: File, field: Field) {
     super([file], file.name, {
       type: file.type,
-      lastModified: file.lastModified,
     });
     this.field = field;
   }

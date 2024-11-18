@@ -60,4 +60,17 @@ describe("HonoStorageFile", () => {
       expect(file.extension).toBe("zip");
     });
   });
+
+  it("should inherit type from original File", () => {
+    const file = new HonoStorageFile(
+      new File([], "sample1.txt", {
+        type: "text/plain",
+      }),
+      {
+        name: "file",
+        type: "single",
+      },
+    );
+    expect(file.type).toBe("text/plain");
+  });
 });
