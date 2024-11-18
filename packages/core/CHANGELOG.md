@@ -1,5 +1,12 @@
 # @hono-storage/core
 
+## 0.0.14
+
+### Patch Changes
+
+- [#71](https://github.com/sor4chi/hono-storage/pull/71) [`1649e17`](https://github.com/sor4chi/hono-storage/commit/1649e172335fd7780f04412f72769ab7d991a790) Thanks [@sngmn451](https://github.com/sngmn451)! - feat: preserve File type property in HonoStorageFile
+  When a File is processed by the storage middleware, the `type` property from the original File object is now correctly inherited by HonoStorageFile. This ensures the file's content-type is maintained during file uploads.
+
 ## 0.0.13
 
 ### Patch Changes
