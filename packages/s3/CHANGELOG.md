@@ -1,5 +1,12 @@
 # @hono-storage/s3
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [[`1649e17`](https://github.com/sor4chi/hono-storage/commit/1649e172335fd7780f04412f72769ab7d991a790)]:
+  - @hono-storage/core@0.0.14
+
 ## 0.0.12
 
 ### Patch Changes
