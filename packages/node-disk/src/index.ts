@@ -26,11 +26,14 @@ interface HonoDiskStorageOption {
   filename?: HDSCustomFunction;
 }
 
-export class HonoDiskStorage {
+export class HonoDiskStorage<
+  Option extends HonoDiskStorageOption,
+  WithFilename = Option["filename"] extends HDSCustomFunction ? true : false,
+> {
   private storage: HonoStorage;
 
-  constructor(option: HonoDiskStorageOption = {}) {
-    const { dest = "/tmp" } = option;
+  constructor(option: Option) {
+    const { dest = "/tmp" } = option ?? {};
 
     this.storage = new HonoStorage({
       storage: async (c, files) => {
@@ -93,9 +96,11 @@ export class HonoDiskStorage {
       [FILES_KEY]: {
         [key in T]?: FieldValue;
       };
-      [FILE_NAMES_KEY]: {
-        [key in T]: string;
-      };
+      [FILE_NAMES_KEY]: WithFilename extends true
+        ? {
+            [key in T]: string;
+          }
+        : {};
     };
   }> => {
     return async (c, next) => {
@@ -115,9 +120,11 @@ export class HonoDiskStorage {
       [FILES_KEY]: {
         [key in T]?: FieldValue;
       };
-      [FILE_NAMES_KEY]: {
-        [key in T]: string[];
-      };
+      [FILE_NAMES_KEY]: WithFilename extends true
+        ? {
+            [key in T]: string[];
+          }
+        : {};
     };
   }> => {
     return async (c, next) => {
@@ -138,9 +145,13 @@ export class HonoDiskStorage {
           ? FieldValue | undefined
           : FieldValue[];
       };
-      [FILE_NAMES_KEY]: {
-        [key in keyof T]: T[key]["type"] extends "single" ? string : string[];
-      };
+      [FILE_NAMES_KEY]: WithFilename extends true
+        ? {
+            [key in keyof T]: T[key]["type"] extends "single"
+              ? string
+              : string[];
+          }
+        : {};
     };
   }> => {
     return async (c, next) => {
