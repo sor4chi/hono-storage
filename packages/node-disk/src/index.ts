@@ -2,10 +2,19 @@ import { createWriteStream } from "fs";
 import { mkdir } from "fs/promises";
 import { join } from "path";
 
-import { HonoStorage, HonoStorageFile } from "@hono-storage/core";
+import {
+  FieldSchema,
+  FieldValue,
+  FILES_KEY,
+  HonoStorage,
+  HonoStorageFile,
+  MultipleFieldSchema,
+} from "@hono-storage/core";
 import { File } from "@web-std/file";
 
-import type { Context } from "hono";
+import type { Context, MiddlewareHandler } from "hono";
+
+const FILE_NAMES_KEY = "fileNames";
 
 type HDSCustomFunction = (
   c: Context,
@@ -17,11 +26,13 @@ interface HonoDiskStorageOption {
   filename?: HDSCustomFunction;
 }
 
-export class HonoDiskStorage extends HonoStorage {
+export class HonoDiskStorage {
+  private storage: HonoStorage;
+
   constructor(option: HonoDiskStorageOption = {}) {
     const { dest = "/tmp" } = option;
 
-    super({
+    this.storage = new HonoStorage({
       storage: async (c, files) => {
         await Promise.all(
           files.map(async (file) => {
@@ -29,10 +40,25 @@ export class HonoDiskStorage extends HonoStorage {
               typeof dest === "function" ? await dest(c, file) : dest;
             await mkdir(finalDest, { recursive: true });
             if (option.filename) {
+              const savedFileName = await option.filename(c, file);
               await this.handleDestStorage(
                 finalDest,
-                new File([file], await option.filename(c, file)),
+                new File([file], savedFileName),
               );
+
+              const fileNames = c.get(FILE_NAMES_KEY) ?? {};
+              c.set(FILE_NAMES_KEY, {
+                ...fileNames,
+                [file.field.name]: (() => {
+                  const targetFilenameField = fileNames[file.field.name] ?? [];
+
+                  if (file.field.type === "single") {
+                    return savedFileName;
+                  }
+
+                  return [...targetFilenameField, savedFileName];
+                })(),
+              });
             } else {
               await this.handleDestStorage(
                 finalDest,
@@ -57,5 +83,72 @@ export class HonoDiskStorage extends HonoStorage {
       writeStream.write(value);
     }
     writeStream.end();
+  };
+
+  single = <T extends string>(
+    name: T,
+    options?: Omit<MultipleFieldSchema, "type">,
+  ): MiddlewareHandler<{
+    Variables: {
+      [FILES_KEY]: {
+        [key in T]?: FieldValue;
+      };
+      [FILE_NAMES_KEY]: {
+        [key in T]: string;
+      };
+    };
+  }> => {
+    return async (c, next) => {
+      c.set(FILE_NAMES_KEY, {
+        ...(c.get(FILE_NAMES_KEY) ?? {}),
+      });
+
+      await this.storage.single(name, options)(c as Context, next);
+    };
+  };
+
+  multiple = <T extends string>(
+    name: T,
+    options?: Omit<MultipleFieldSchema, "type">,
+  ): MiddlewareHandler<{
+    Variables: {
+      [FILES_KEY]: {
+        [key in T]?: FieldValue;
+      };
+      [FILE_NAMES_KEY]: {
+        [key in T]: string[];
+      };
+    };
+  }> => {
+    return async (c, next) => {
+      c.set(FILE_NAMES_KEY, {
+        ...(c.get(FILE_NAMES_KEY) ?? {}),
+      });
+
+      await this.storage.multiple(name, options)(c as Context, next);
+    };
+  };
+
+  fields = <T extends Record<string, FieldSchema>>(
+    schema: T,
+  ): MiddlewareHandler<{
+    Variables: {
+      [FILES_KEY]: {
+        [key in keyof T]: T[key]["type"] extends "single"
+          ? FieldValue | undefined
+          : FieldValue[];
+      };
+      [FILE_NAMES_KEY]: {
+        [key in keyof T]: T[key]["type"] extends "single" ? string : string[];
+      };
+    };
+  }> => {
+    return async (c, next) => {
+      c.set(FILE_NAMES_KEY, {
+        ...(c.get(FILE_NAMES_KEY) ?? {}),
+      });
+
+      await this.storage.fields(schema)(c as Context, next);
+    };
   };
 }
