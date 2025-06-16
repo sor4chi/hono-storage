@@ -1,5 +1,5 @@
 ---
-"@hono-storage/node-disk": patch
+"@hono-storage/node-disk": minor
 ---
 
 Add fileNames field to access generated filenames if filename option is set
