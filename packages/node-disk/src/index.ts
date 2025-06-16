@@ -26,14 +26,11 @@ interface HonoDiskStorageOption {
   filename?: HDSCustomFunction;
 }
 
-export class HonoDiskStorage<
-  Option extends HonoDiskStorageOption,
-  WithFilename = Option["filename"] extends HDSCustomFunction ? true : false,
-> {
+export class HonoDiskStorage {
   private storage: HonoStorage;
 
-  constructor(option: Option) {
-    const { dest = "/tmp" } = option ?? {};
+  constructor(option: HonoDiskStorageOption = {}) {
+    const { dest = "/tmp" } = option;
 
     this.storage = new HonoStorage({
       storage: async (c, files) => {
@@ -42,32 +39,34 @@ export class HonoDiskStorage<
             const finalDest =
               typeof dest === "function" ? await dest(c, file) : dest;
             await mkdir(finalDest, { recursive: true });
+
+            let savedFileName = file.name;
             if (option.filename) {
-              const savedFileName = await option.filename(c, file);
+              savedFileName = await option.filename(c, file);
               await this.handleDestStorage(
                 finalDest,
                 new File([file], savedFileName),
               );
-
-              const fileNames = c.get(FILE_NAMES_KEY) ?? {};
-              c.set(FILE_NAMES_KEY, {
-                ...fileNames,
-                [file.field.name]: (() => {
-                  const targetFilenameField = fileNames[file.field.name] ?? [];
-
-                  if (file.field.type === "single") {
-                    return savedFileName;
-                  }
-
-                  return [...targetFilenameField, savedFileName];
-                })(),
-              });
             } else {
               await this.handleDestStorage(
                 finalDest,
                 new File([file], file.name),
               );
             }
+
+            const fileNames = c.get(FILE_NAMES_KEY) ?? {};
+            c.set(FILE_NAMES_KEY, {
+              ...fileNames,
+              [file.field.name]: (() => {
+                const targetFilenameField = fileNames[file.field.name] ?? [];
+
+                if (file.field.type === "single") {
+                  return savedFileName;
+                }
+
+                return [...targetFilenameField, savedFileName];
+              })(),
+            });
           }),
         );
       },
@@ -96,11 +95,9 @@ export class HonoDiskStorage<
       [FILES_KEY]: {
         [key in T]?: FieldValue;
       };
-      [FILE_NAMES_KEY]: WithFilename extends true
-        ? {
-            [key in T]: string;
-          }
-        : {};
+      [FILE_NAMES_KEY]: {
+        [key in T]: string;
+      };
     };
   }> => {
     return async (c, next) => {
@@ -120,11 +117,9 @@ export class HonoDiskStorage<
       [FILES_KEY]: {
         [key in T]?: FieldValue;
       };
-      [FILE_NAMES_KEY]: WithFilename extends true
-        ? {
-            [key in T]: string[];
-          }
-        : {};
+      [FILE_NAMES_KEY]: {
+        [key in T]: string[];
+      };
     };
   }> => {
     return async (c, next) => {
@@ -145,13 +140,9 @@ export class HonoDiskStorage<
           ? FieldValue | undefined
           : FieldValue[];
       };
-      [FILE_NAMES_KEY]: WithFilename extends true
-        ? {
-            [key in keyof T]: T[key]["type"] extends "single"
-              ? string
-              : string[];
-          }
-        : {};
+      [FILE_NAMES_KEY]: {
+        [key in keyof T]: T[key]["type"] extends "single" ? string : string[];
+      };
     };
   }> => {
     return async (c, next) => {
