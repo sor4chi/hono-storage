@@ -118,5 +118,24 @@ describe("HonoDiskStorage", () => {
         }),
       );
     });
+
+    it("returns the uploaded file's filename", async () => {
+      const PREFIX = "prefix-";
+      const storage = new HonoDiskStorage({
+        dest: join(__dirname, "tmp"),
+        filename: (_, file) =>
+          `${PREFIX}${file.originalname}.${file.extension}`,
+      });
+      const app = new Hono();
+      app.post("/upload", storage.single("file"), (c) =>
+        c.text(c.var.fileNames.file),
+      );
+      const server = createAdaptorServer(app);
+      const res = await request(server)
+        .post("/upload")
+        .attach("file", join(__dirname, "fixture/sample1.txt"));
+      expect(res.status).toBe(200);
+      expect(res.text).toBe(`${PREFIX}sample1.txt`);
+    });
   });
 });
