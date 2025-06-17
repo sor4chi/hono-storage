@@ -1,5 +1,14 @@
 # @hono-storage/node-disk
 
+## 0.0.17
+
+### Patch Changes
+
+- [#77](https://github.com/sor4chi/hono-storage/pull/77) [`bdb881b`](https://github.com/sor4chi/hono-storage/commit/bdb881b688cf6a9be06218f166b4921988a77829) Thanks [@kofta999](https://github.com/kofta999)! - Add fileNames field to access generated filenames if filename option is set
+
+  This adds a `fileNames` field for `nodejs-disk` package to return the generated file names if filename option was used when initializing.
+  The approach is highly similar to `signedURLs` field in `s3` package.
+
 ## 0.0.16
 
 ### Patch Changes
